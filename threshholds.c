@@ -3,8 +3,9 @@
 #define FLUSH_FLUSH 1
 #define FLUSH_RELOAD 0
 
-// EDIT THIS!
-#define METHOD 0
+/**** EDIT THIS! ****/
+#define METHOD 1
+/*******************/
 
 #define NUMBER_OF_POINTS 1024*100*1
 /***************************/
@@ -34,8 +35,8 @@ size_t array[5 * 1024];
 sem_t  sent;
 sem_t  ready_to_receive;
 
-size_t hit_histogram[600];
-size_t miss_histogram[600];
+size_t hit_data[NUMBER_OF_POINTS];
+size_t miss_data[NUMBER_OF_POINTS];
 
 
 int main(int argc, char** argv)
@@ -68,10 +69,16 @@ int main(int argc, char** argv)
     }
 
     // print results
-    FILE* f = fopen("threshholds_out.txt", "w");
-    for(size_t i = 0; i < 600; ++i)
+    FILE* f = fopen("threshholds_out_new.txt", "w");
+    fprintf(f, "%d\n", NUMBER_OF_POINTS);
+    fprintf(f, "%s\n", METHOD?"ff":"fr");
+    for(size_t i = 0; i < NUMBER_OF_POINTS; ++i)
     {
-        fprintf(f, "%3zu: %10zu %10zu\n", i, hit_histogram[i], miss_histogram[i]);
+        fprintf(f, "%lu\n", hit_data[i]);
+    }
+    for(size_t i = 0; i < NUMBER_OF_POINTS; ++i)
+    {
+        fprintf(f, "%lu\n", miss_data[i]);
     }
     return 0;
 }
@@ -115,7 +122,7 @@ void* receiver_hit(void* data)
         sched_yield();
         size_t d = MEASSURE(array + 2 * 1024);
 
-        hit_histogram[MIN(599, d)]++;
+        hit_data[i]=d;
 
     }
 
@@ -132,7 +139,7 @@ void* receiver_miss(void* data)
         sched_yield();
         size_t d = MEASSURE(array + 2 * 1024);
 
-        miss_histogram[MIN(599, d)]++;
+        miss_data[i]=d;
     }
 
     return NULL;

@@ -4,11 +4,11 @@
 #define FLUSH_RELOAD 0
 
 // EDIT THIS!
-#define METHOD FLUSH_FLUSH
+#define METHOD FLUSH_RELOAD
 #define STREAM_LENGTH 1000000
-#define THRESHHOLD 160
+#define THRESHHOLD 114
 /***************************/
-#define FLUSH_FLUSH_COMP >=
+#define FLUSH_FLUSH_COMP >
 #define FLUSH_RELOAD_COMP <=
 #define FLUSH_RELOAD_MEASSURE meassure_fr
 #define FLUSH_FLUSH_MEASSURE meassure_ff
