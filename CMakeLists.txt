@@ -8,3 +8,6 @@ target_link_libraries(poc pthread)
 
 add_executable(threshholds threshholds.c lib.c lib.h)
 target_link_libraries(threshholds pthread)
+
+add_executable(poc_sync poc_sync.c lib.c lib.h)
+target_link_libraries(poc_sync pthread)
