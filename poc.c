@@ -6,7 +6,7 @@
 // EDIT THIS!
 #define METHOD FLUSH_RELOAD
 #define STREAM_LENGTH 1000000
-#define THRESHHOLD 114
+#define THRESHHOLD 159
 /***************************/
 #define FLUSH_FLUSH_COMP >
 #define FLUSH_RELOAD_COMP <=
@@ -38,6 +38,11 @@ void* receiver(void* data);
 
 int main(int argc, char** argv)
 {
+    printf("Transmitting thread-thread:\n\n"
+           "- STREAM_LENGTH: %d\n"
+           "- METHOD: %s\n"
+           "- THRESHHOLD: %d\n",
+           STREAM_LENGTH, METHOD == FLUSH_RELOAD ? "Flush+Flush" : "Flush+Reload", THRESHHOLD);
     {   //setup
         memset(array, -1, 5 * 1024 * sizeof(size_t));
         srand(time(0));
@@ -64,10 +69,12 @@ int main(int argc, char** argv)
         size_t FP_counter = 0;
         size_t FN_counter = 0;
 
-        // FILE* f = fopen("poc_out.txt", "w");
+        FILE* f_pred = fopen("pred.txt", "w");
+        FILE* f_act = fopen("act.txt", "w");
         for(int i = 0; i < STREAM_LENGTH; i++)
         {
-            // fprintf(f, "%lu - %lu - %lu \n", output_stream[i], input_stream[i],output_stream[i] >= THRESHHOLD ? 1lu : 0lu);
+            fprintf(f_pred, "%lu\n", output_stream[i] SATISFIES THRESHHOLD ? 1lu : 0lu);
+            fprintf(f_act, "%lu\n", input_stream[i]);
             if(input_stream[i] == output_stream[i] SATISFIES THRESHHOLD ? 1lu : 0lu)
             {
                 if(input_stream[i] == 1)
@@ -84,11 +91,11 @@ int main(int argc, char** argv)
             }
         }
         // fclose(f);
-        fprintf(stdout, "Accuracy: %lf%%\n", ((double) (TP_counter + TN_counter) * 100) / STREAM_LENGTH);
-        fprintf(stdout, "Accuracy (1s) aka Sensitivity: %lu/%zu = %lf%%\n", TP_counter, (FN_counter + TP_counter),
-                ((double) (TP_counter) * 100) / (double) (FN_counter + TP_counter));
-        fprintf(stdout, "Accuracy (0s) aka Specificity: %lu/%zu = %lf%%\n", TN_counter, (FP_counter + TN_counter),
-                ((double) (TN_counter) * 100) / (double) (FP_counter + TN_counter));
+        fprintf(stdout, "\nAccuracy: %lf%%\n", ((double) (TP_counter + TN_counter) * 100) / STREAM_LENGTH);
+//        fprintf(stdout, "Accuracy (1s) aka Sensitivity: %lu/%zu = %lf%%\n", TP_counter, (FN_counter + TP_counter),
+//                ((double) (TP_counter) * 100) / (double) (FN_counter + TP_counter));
+//        fprintf(stdout, "Accuracy (0s) aka Specificity: %lu/%zu = %lf%%\n", TN_counter, (FP_counter + TN_counter),
+//                ((double) (TN_counter) * 100) / (double) (FP_counter + TN_counter));
     }
 
     return 0;
