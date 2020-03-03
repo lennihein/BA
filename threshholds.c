@@ -1,11 +1,33 @@
 #include "lib.h"
 
+#define FLUSH_FLUSH 1
+#define FLUSH_RELOAD 0
+
+// EDIT THIS!
+#define METHOD 0
+
+#define NUMBER_OF_POINTS 1024*100*1
+/***************************/
+#define FLUSH_FLUSH_COMP >=
+#define FLUSH_RELOAD_COMP <=
+#define FLUSH_RELOAD_MEASSURE meassure_fr
+#define FLUSH_FLUSH_MEASSURE meassure_ff
+
+#if METHOD == FLUSH_FLUSH
+#define SATISFIES FLUSH_FLUSH_COMP
+#define MEASSURE FLUSH_FLUSH_MEASSURE
+#endif
+
+#if METHOD == FLUSH_RELOAD
+#define SATISFIES FLUSH_RELOAD_COMP
+#define MEASSURE FLUSH_RELOAD_MEASSURE
+#endif
+/***************************/
+
 void* sender_hit(void* data);
 void* sender_miss(void* data);
 void* receiver_hit(void* data);
 void* receiver_miss(void* data);
-
-#define NUMBER_OF_POINTS 1024*100*1
 
 size_t array[5 * 1024];
 
@@ -91,7 +113,7 @@ void* receiver_hit(void* data)
         sem_wait(&sent);
 
         sched_yield();
-        size_t d = meassure_fr(array + 2 * 1024);
+        size_t d = MEASSURE(array + 2 * 1024);
 
         hit_histogram[MIN(599, d)]++;
 
@@ -108,7 +130,7 @@ void* receiver_miss(void* data)
         sem_wait(&sent);
 
         sched_yield();
-        size_t d = meassure_fr(array + 2 * 1024);
+        size_t d = MEASSURE(array + 2 * 1024);
 
         miss_histogram[MIN(599, d)]++;
     }

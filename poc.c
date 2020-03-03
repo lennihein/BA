@@ -1,11 +1,27 @@
 #include "lib.h"
 
-// EDIT THESE!
-#define STREAM_LENGTH 100000
-#define THRESHHOLD 200
-#define FLUSH_FLUSH >=
-#define FLUSH_RELOAD <=
-#define SATISFIES FLUSH_RELOAD
+#define FLUSH_FLUSH 1
+#define FLUSH_RELOAD 0
+
+// EDIT THIS!
+#define METHOD FLUSH_FLUSH
+#define STREAM_LENGTH 1000000
+#define THRESHHOLD 160
+/***************************/
+#define FLUSH_FLUSH_COMP >=
+#define FLUSH_RELOAD_COMP <=
+#define FLUSH_RELOAD_MEASSURE meassure_fr
+#define FLUSH_FLUSH_MEASSURE meassure_ff
+
+#if METHOD == FLUSH_FLUSH
+#define SATISFIES FLUSH_FLUSH_COMP
+#define MEASSURE FLUSH_FLUSH_MEASSURE
+#endif
+
+#if METHOD == FLUSH_RELOAD
+#define SATISFIES FLUSH_RELOAD_COMP
+#define MEASSURE FLUSH_RELOAD_MEASSURE
+#endif
 /***************************/
 
 size_t array[5 * 1024];
@@ -108,7 +124,7 @@ void* receiver(void* data)
         sem_wait(&sent);
 
         sched_yield();
-        size_t d = meassure_fr(array + 2 * 1024);
+        size_t d = MEASSURE(array + 2 * 1024);
 
         output_stream[i] = d;
 
