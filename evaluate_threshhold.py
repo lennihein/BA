@@ -44,8 +44,8 @@ mu_miss, std_miss = norm.fit(misses)
 # fit for Hits
 mu_hit, std_hit = norm.fit(hits)
 
-plt.hist(hits, bins=200, density=True, alpha=0.6, color='g')
-plt.hist(misses, bins=200, density=True, alpha=0.6, color='r')
+plt.hist(hits, bins=200, density=True, alpha=0.6, color='g', label="Hits")
+plt.hist(misses, bins=200, density=True, alpha=0.6, color='r', label="Misses")
 
 if method == "ff":
     plt.xlim(120, 220)
@@ -60,6 +60,8 @@ print("Fit results Hits: mu = %.2f,  std = %.2f" % (mu_hit, std_hit))
 p2 = norm.pdf(x, mu_miss, std_miss)
 plt.plot(x, p2, 'k', linewidth=2)
 print("Fit results Misses: mu = %.2f,  std = %.2f" % (mu_miss, std_miss))
+
+plt.legend()
 
 result = solve(mu_hit, mu_miss, std_hit, std_miss)
 
