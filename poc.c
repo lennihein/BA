@@ -6,7 +6,7 @@
 // EDIT THIS!
 #define METHOD FLUSH_FLUSH
 #define STREAM_LENGTH 1000000
-#define THRESHHOLD 155
+#define THRESHHOLD 163
 /***************************/
 #define FLUSH_FLUSH_COMP >
 #define FLUSH_RELOAD_COMP <=

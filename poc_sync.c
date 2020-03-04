@@ -4,9 +4,9 @@
 #define FLUSH_RELOAD 0
 
 // EDIT THIS!
-#define METHOD FLUSH_RELOAD
-#define STREAM_LENGTH 1024*8
-#define THRESHHOLD 121
+#define METHOD FLUSH_FLUSH
+#define STREAM_LENGTH 1024*8*8
+#define THRESHHOLD 155
 #define INTERVAL 100000 //0.1ms -> 10KHz
 /***************************/
 #define FLUSH_FLUSH_COMP >
@@ -34,9 +34,11 @@ void* receiver(void* _);
 
 int main()
 {
-    printf("Starting up:\n"
-           "POC-Sync\n"
-           "Using hardwareclock to sync transmission on shared memory between two threads\n");
+    printf("Transmitting thread-thread, with hardwareclock-sync:\n\n"
+           "- STREAM_LENGTH: %d\n"
+           "- METHOD: %s\n"
+           "- THRESHHOLD: %d\n",
+           STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", THRESHHOLD);
 
     //setup
     memset(array, -1, 5 * 1024 * sizeof(size_t));
