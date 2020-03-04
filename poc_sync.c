@@ -26,9 +26,6 @@
 
 size_t array[5 * 1024];
 
-sem_t sent;
-sem_t ready_to_receive;
-
 size_t input_stream[STREAM_LENGTH];
 size_t output_stream[STREAM_LENGTH];
 
@@ -98,12 +95,15 @@ int main()
 
 void* sender(void* _)
 {
-    struct timespec t0;
-    clock_gettime(CLOCK_MONOTONIC, &t0);
-    uint32_t nanosecs;
+    struct timespec t;
+    clock_gettime(CLOCK_MONOTONIC, &t);
+    uint64_t target = t.tv_sec * 1000000000;
+    target += t.tv_nsec;
+    uint64_t current;
 
-    for(int i = 0; i < STREAM_LENGTH; ++i)
+    for(int i = 0; i < STREAM_LENGTH; i++)
     {
+        /**************************/
         if(input_stream[i])
         {
             maccess(array + 2 * 1024);
@@ -112,20 +112,17 @@ void* sender(void* _)
         {
             flush(array + 2 * 1024);
         }
-
-        // wait to be in sync with next phase
-        nanosecs = INTERVAL;
-        nanosecs += t0.tv_nsec;
-        // overflow into seconds
-        if(unlikely(nanosecs > 999999999))
+        /**************************/
+        target += INTERVAL;
+        while(1)
         {
-            nanosecs -= 1000000000;
-            t0.tv_sec++;
+            clock_gettime(CLOCK_MONOTONIC, &t);
+            current = (t.tv_sec * 1000000000) + t.tv_nsec;
+            if(current>=target)
+                break;
         }
-        t0.tv_nsec = nanosecs;
-        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &t0, NULL);
-    }
 
+    }
     return NULL;
 }
 
@@ -135,7 +132,7 @@ void* receiver(void* _)
     clock_gettime(CLOCK_MONOTONIC, &t0);
     uint32_t nanosecs;
 
-    for(int i = 0; i < STREAM_LENGTH; ++i)
+    for(int i = 0; i < STREAM_LENGTH; i++)
     {
         sched_yield();
         size_t d = MEASSURE(array + 2 * 1024);
