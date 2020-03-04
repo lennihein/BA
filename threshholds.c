@@ -4,7 +4,7 @@
 #define FLUSH_RELOAD 0
 
 /**** EDIT THIS! ****/
-#define METHOD 1
+#define METHOD FLUSH_RELOAD
 /*******************/
 
 #define NUMBER_OF_POINTS 1024*1024*1
