@@ -1,7 +1,7 @@
 from sklearn import metrics
 from scipy.stats import wasserstein_distance
 
-print("\nResults for the Transmission:")
+print("Results for the Transmission:")
 
 pred_file = open('pred.txt', 'r')
 pred = pred_file.readlines()

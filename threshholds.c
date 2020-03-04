@@ -4,10 +4,10 @@
 #define FLUSH_RELOAD 0
 
 /**** EDIT THIS! ****/
-#define METHOD 1
+#define METHOD FLUSH_FLUSH
 /*******************/
 
-#define NUMBER_OF_POINTS 1024*100*1
+#define NUMBER_OF_POINTS 1024*1024*1
 /***************************/
 #define FLUSH_FLUSH_COMP >=
 #define FLUSH_RELOAD_COMP <=
