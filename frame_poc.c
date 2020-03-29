@@ -5,8 +5,8 @@
 
 // EDIT THIS!
 #define METHOD 0
-#define STREAM_LENGTH 1024*8*8
-#define THRESHHOLD 121
+#define STREAM_LENGTH 100
+#define THRESHHOLD 190
 #define INTERVAL 100000 //0.1ms -> 10KHz
 /***************************/
 #define FLUSH_FLUSH_COMP >
@@ -67,7 +67,7 @@ int main()
     pthread_create(&s, NULL, sender, NULL);
     pthread_create(&r, NULL, receiver, NULL);
 
-    pthread_join(s, NULL);
+//    pthread_join(s, NULL);
     pthread_join(r, &ret_val);
 
     {   // evaluation and print
@@ -111,48 +111,50 @@ int main()
 
 void* sender(void* _)
 {
-
-    sleep(1);
-
     struct timespec t;
-    clock_gettime(CLOCK_MONOTONIC, &t);
-    uint64_t target = t.tv_sec * 1000000000;
-    target += t.tv_nsec;
     uint64_t current;
+    uint64_t target;
 
-    for(int i = 0; i < (7 * 8 + 7); i++)
-    {
-        target += INTERVAL;
-        while(1)
-        {
-            /**************************/
-            if(!(i % 2))
-            {
-                maccess(array + 2 * 1024);
-            }
-            else
-            {
-                flush(array + 2 * 1024);
-            }
-            /**************************/
-            clock_gettime(CLOCK_MONOTONIC, &t);
-            current = (t.tv_sec * 1000000000) + t.tv_nsec;
-            if(current >= target)
-                break;
-        }
-    }
-
-    target += INTERVAL;
-    while(1)
-    {
-        /**************************/
-        maccess(array + 2 * 1024);
-        /**************************/
-        clock_gettime(CLOCK_MONOTONIC, &t);
-        current = (t.tv_sec * 1000000000) + t.tv_nsec;
-        if(current >= target)
-            break;
-    }
+//    loop:
+//    usleep(1000);
+//
+    clock_gettime(CLOCK_MONOTONIC, &t);
+    target = t.tv_sec * 1000000000;
+    target += t.tv_nsec;
+//
+//    for(int i = 0; i < (7 * 8 + 7); i++)
+//    {
+//        target += INTERVAL;
+//        while(1)
+//        {
+//            /**************************/
+//            if(!(i % 2))
+//            {
+//                maccess(array + 2 * 1024);
+//            }
+//            else
+//            {
+//                flush(array + 2 * 1024);
+//            }
+//            /**************************/
+//            clock_gettime(CLOCK_MONOTONIC, &t);
+//            current = (t.tv_sec * 1000000000) + t.tv_nsec;
+//            if(current >= target)
+//                break;
+//        }
+//    }
+//
+//    target += INTERVAL;
+//    while(1)
+//    {
+//        /**************************/
+//        maccess(array + 2 * 1024);
+//        /**************************/
+//        clock_gettime(CLOCK_MONOTONIC, &t);
+//        current = (t.tv_sec * 1000000000) + t.tv_nsec;
+//        if(current >= target)
+//            break;
+//    }
 
     for(int i = 0; i < STREAM_LENGTH; i++)
     {
@@ -176,6 +178,7 @@ void* sender(void* _)
         }
 
     }
+//    goto loop;
     return NULL;
 }
 
@@ -183,39 +186,42 @@ void* receiver(void* _)
 {
     INIT_CLOCK
     int i = 0;
-    int preamble_counter = 0;
-    while(1)
-    {
-        sched_yield();
-        size_t d = MEASSURE(array + 2 * 1024);
-
-        if(preamble_counter < 7 * 8 + 7)
-        {
-            if(d == preamble_counter % 2)
-            {
-                // wrong bit
-                preamble_counter = 0;
-            }
-            else
-            {
-                // correct bit
-                preamble_counter++;
-            }
-        }
-        else
-        {
-            if(d == 1)
-            {
-                break;
-            }
-            else
-            {
-                preamble_counter = 0;
-            }
-        }
-
-        WAIT_FOR_CLOCK
-    }
+//    int preamble_counter = 0;
+//    while(1)
+//    {
+//        sched_yield();
+//        size_t d = MEASSURE(array + 2 * 1024);
+//        d = d SATISFIES THRESHHOLD ? 1lu : 0lu;
+//
+//        if(preamble_counter < 7 * 8 + 7)
+//        {
+//            if(d == preamble_counter % 2)
+//            {
+//                // wrong bit
+////                printf("counter=%i\n", preamble_counter);
+//                preamble_counter = 0;
+//            }
+//            else
+//            {
+//                // correct bit
+//                preamble_counter++;
+//            }
+//        }
+//        else
+//        {
+//            if(d == 1)
+//            {
+//                break;
+//            }
+//            else
+//            {
+////                printf("counter=%i\n", preamble_counter);
+//                preamble_counter = 0;
+//            }
+//        }
+//
+//        WAIT_FOR_CLOCK
+//    }
     while(1)
     {
         sched_yield();

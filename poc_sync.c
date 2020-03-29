@@ -4,9 +4,9 @@
 #define FLUSH_RELOAD 0
 
 // EDIT THIS!
-#define METHOD 1
-#define STREAM_LENGTH 1024*8*8
-#define THRESHHOLD 158
+#define METHOD 0
+#define STREAM_LENGTH 100
+#define THRESHHOLD 190
 #define INTERVAL 100000 //0.1ms -> 10KHz
 /***************************/
 #define FLUSH_FLUSH_COMP >
