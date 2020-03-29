@@ -4,9 +4,9 @@
 #define FLUSH_RELOAD 0
 
 // EDIT THIS!
-#define METHOD 1
+#define METHOD 0
 #define STREAM_LENGTH 1024*8*8
-#define THRESHHOLD 158
+#define THRESHHOLD 121
 #define INTERVAL 100000 //0.1ms -> 10KHz
 /***************************/
 #define FLUSH_FLUSH_COMP >
@@ -28,13 +28,27 @@ size_t array[5 * 1024];
 
 size_t input_stream[STREAM_LENGTH];
 size_t output_stream[STREAM_LENGTH];
+struct field // hope this aligns properly :o
+{
+    size_t mac_addr[6 * 8];
+    size_t mac_src[6 * 8];
+    size_t tag[4 * 8];
+    size_t length[2 * 8];
+};
+struct field field_stream;
 
 void* sender(void* _);
+
 void* receiver(void* _);
 
 int main()
 {
-    printf("Transmitting thread-thread, with hardwareclock-sync:\n\n"
+
+//    printf("struct:\t%p\naddr: \t%p\nsrc: \t%p\ntag: \t%p\nlength:\t%p\n", &field_stream, field_stream.mac_addr,
+//           field_stream.mac_src, field_stream.tag, field_stream.length);
+//    return 0;
+
+    printf("Transmitting thread-thread, with hardwareclock-sync and ethernet frames:\n\n"
            "- STREAM_LENGTH: %d\n"
            "- METHOD: %s\n"
            "- THRESHHOLD: %d\n",
@@ -97,11 +111,48 @@ int main()
 
 void* sender(void* _)
 {
+
+    sleep(1);
+
     struct timespec t;
     clock_gettime(CLOCK_MONOTONIC, &t);
     uint64_t target = t.tv_sec * 1000000000;
     target += t.tv_nsec;
     uint64_t current;
+
+    for(int i = 0; i < (7 * 8 + 7); i++)
+    {
+        target += INTERVAL;
+        while(1)
+        {
+            /**************************/
+            if(!(i % 2))
+            {
+                maccess(array + 2 * 1024);
+            }
+            else
+            {
+                flush(array + 2 * 1024);
+            }
+            /**************************/
+            clock_gettime(CLOCK_MONOTONIC, &t);
+            current = (t.tv_sec * 1000000000) + t.tv_nsec;
+            if(current >= target)
+                break;
+        }
+    }
+
+    target += INTERVAL;
+    while(1)
+    {
+        /**************************/
+        maccess(array + 2 * 1024);
+        /**************************/
+        clock_gettime(CLOCK_MONOTONIC, &t);
+        current = (t.tv_sec * 1000000000) + t.tv_nsec;
+        if(current >= target)
+            break;
+    }
 
     for(int i = 0; i < STREAM_LENGTH; i++)
     {
@@ -120,7 +171,7 @@ void* sender(void* _)
             /**************************/
             clock_gettime(CLOCK_MONOTONIC, &t);
             current = (t.tv_sec * 1000000000) + t.tv_nsec;
-            if(current>=target)
+            if(current >= target)
                 break;
         }
 
@@ -130,29 +181,51 @@ void* sender(void* _)
 
 void* receiver(void* _)
 {
-    struct timespec t0;
-    clock_gettime(CLOCK_MONOTONIC, &t0);
-    uint32_t nanosecs;
-
-    for(int i = 0; i < STREAM_LENGTH; i++)
+    INIT_CLOCK
+    int i = 0;
+    int preamble_counter = 0;
+    while(1)
     {
         sched_yield();
         size_t d = MEASSURE(array + 2 * 1024);
 
-        output_stream[i] = d;
-
-        // wait to be in sync with next phase
-        nanosecs = INTERVAL;
-        nanosecs += t0.tv_nsec;
-        // overflow into seconds
-        if(unlikely(nanosecs > 999999999))
+        if(preamble_counter < 7 * 8 + 7)
         {
-            nanosecs -= 1000000000;
-            t0.tv_sec++;
+            if(d == preamble_counter % 2)
+            {
+                // wrong bit
+                preamble_counter = 0;
+            }
+            else
+            {
+                // correct bit
+                preamble_counter++;
+            }
         }
-        t0.tv_nsec = nanosecs;
-        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &t0, NULL);
-    }
+        else
+        {
+            if(d == 1)
+            {
+                break;
+            }
+            else
+            {
+                preamble_counter = 0;
+            }
+        }
 
-    return NULL;
+        WAIT_FOR_CLOCK
+    }
+    while(1)
+    {
+        sched_yield();
+        size_t d = MEASSURE(array + 2 * 1024);
+
+        output_stream[i++] = d;
+
+        if(i == STREAM_LENGTH)
+            return NULL;
+
+        WAIT_FOR_CLOCK
+    }
 }

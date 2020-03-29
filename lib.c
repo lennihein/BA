@@ -2,7 +2,7 @@
 
 size_t meassure_ff(size_t* addr)
 {
-    uint64_t    start_high, start_low,
+    uint64_t start_high, start_low,
             end_high, end_low;
 
     asm volatile
@@ -37,11 +37,13 @@ size_t meassure_ff(size_t* addr)
     "%rax", "%rbx", "%rcx", "%rdx"
     );
 
-    return ((end_high<<32) | end_low) - ((start_high<<32) | start_low);
+    return ((end_high << 32) | end_low) - ((start_high << 32) | start_low);
 
-}size_t meassure_fr(size_t* addr)
+}
+
+size_t meassure_fr(size_t* addr)
 {
-    uint64_t    start_high, start_low,
+    uint64_t start_high, start_low,
             end_high, end_low;
 
     asm volatile
@@ -76,7 +78,7 @@ size_t meassure_ff(size_t* addr)
     "%rax", "%rbx", "%rcx", "%rdx"
     );
 
-    return ((end_high<<32) | end_low) - ((start_high<<32) | start_low);
+    return ((end_high << 32) | end_low) - ((start_high << 32) | start_low);
 }
 
 // following code is taken from D. Gruss
@@ -90,7 +92,8 @@ void maccess(void* p)
     : "rax");
 }
 
-void flush(void* p) {
+void flush(void* p)
+{
     asm volatile ("clflush 0(%0)\n"
     :
     : "c" (p)
