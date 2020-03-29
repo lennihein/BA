@@ -105,19 +105,19 @@ void* sender(void* _)
 
     for(int i = 0; i < STREAM_LENGTH; i++)
     {
-        /**************************/
-        if(input_stream[i])
-        {
-            maccess(array + 2 * 1024);
-        }
-        else
-        {
-            flush(array + 2 * 1024);
-        }
-        /**************************/
         target += INTERVAL;
         while(1)
         {
+            /**************************/
+            if(input_stream[i])
+            {
+                maccess(array + 2 * 1024);
+            }
+            else
+            {
+                flush(array + 2 * 1024);
+            }
+            /**************************/
             clock_gettime(CLOCK_MONOTONIC, &t);
             current = (t.tv_sec * 1000000000) + t.tv_nsec;
             if(current>=target)
