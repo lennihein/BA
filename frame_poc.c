@@ -43,11 +43,6 @@ void* receiver(void* _);
 
 int main()
 {
-
-//    printf("struct:\t%p\naddr: \t%p\nsrc: \t%p\ntag: \t%p\nlength:\t%p\n", &field_stream, field_stream.mac_addr,
-//           field_stream.mac_src, field_stream.tag, field_stream.length);
-//    return 0;
-
     printf("Transmitting thread-thread, with hardwareclock-sync and ethernet frames:\n\n"
            "- STREAM_LENGTH: %d\n"
            "- METHOD: %s\n"
@@ -67,8 +62,8 @@ int main()
     pthread_create(&s, NULL, sender, NULL);
     pthread_create(&r, NULL, receiver, NULL);
 
-//    pthread_join(s, NULL);
     pthread_join(r, &ret_val);
+    pthread_cancel(s);
 
     {   // evaluation and print
         size_t TP_counter = 0;
@@ -109,52 +104,54 @@ int main()
     return 0;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
 void* sender(void* _)
 {
     struct timespec t;
     uint64_t current;
     uint64_t target;
 
-//    loop:
-//    usleep(1000);
-//
+    loop:
+    usleep(1000);
+
     clock_gettime(CLOCK_MONOTONIC, &t);
     target = t.tv_sec * 1000000000;
     target += t.tv_nsec;
-//
-//    for(int i = 0; i < (7 * 8 + 7); i++)
-//    {
-//        target += INTERVAL;
-//        while(1)
-//        {
-//            /**************************/
-//            if(!(i % 2))
-//            {
-//                maccess(array + 2 * 1024);
-//            }
-//            else
-//            {
-//                flush(array + 2 * 1024);
-//            }
-//            /**************************/
-//            clock_gettime(CLOCK_MONOTONIC, &t);
-//            current = (t.tv_sec * 1000000000) + t.tv_nsec;
-//            if(current >= target)
-//                break;
-//        }
-//    }
-//
-//    target += INTERVAL;
-//    while(1)
-//    {
-//        /**************************/
-//        maccess(array + 2 * 1024);
-//        /**************************/
-//        clock_gettime(CLOCK_MONOTONIC, &t);
-//        current = (t.tv_sec * 1000000000) + t.tv_nsec;
-//        if(current >= target)
-//            break;
-//    }
+
+    for(int i = 0; i < (7 * 8 + 7); i++)
+    {
+        target += INTERVAL;
+        while(1)
+        {
+            /**************************/
+            if(!(i % 2))
+            {
+                maccess(array + 2 * 1024);
+            }
+            else
+            {
+                flush(array + 2 * 1024);
+            }
+            /**************************/
+            clock_gettime(CLOCK_MONOTONIC, &t);
+            current = (t.tv_sec * 1000000000) + t.tv_nsec;
+            if(current >= target)
+                break;
+        }
+    }
+
+    target += INTERVAL;
+    while(1)
+    {
+        /**************************/
+        maccess(array + 2 * 1024);
+        /**************************/
+        clock_gettime(CLOCK_MONOTONIC, &t);
+        current = (t.tv_sec * 1000000000) + t.tv_nsec;
+        if(current >= target)
+            break;
+    }
 
     for(int i = 0; i < STREAM_LENGTH; i++)
     {
@@ -178,56 +175,58 @@ void* sender(void* _)
         }
 
     }
-//    goto loop;
+    goto loop;
     return NULL;
 }
+#pragma clang diagnostic pop
 
 void* receiver(void* _)
 {
     INIT_CLOCK
     int i = 0;
-//    int preamble_counter = 0;
-//    while(1)
-//    {
-//        sched_yield();
-//        size_t d = MEASSURE(array + 2 * 1024);
-//        d = d SATISFIES THRESHHOLD ? 1lu : 0lu;
-//
-//        if(preamble_counter < 7 * 8 + 7)
-//        {
-//            if(d == preamble_counter % 2)
-//            {
-//                // wrong bit
-////                printf("counter=%i\n", preamble_counter);
-//                preamble_counter = 0;
-//            }
-//            else
-//            {
-//                // correct bit
-//                preamble_counter++;
-//            }
-//        }
-//        else
-//        {
-//            if(d == 1)
-//            {
-//                break;
-//            }
-//            else
-//            {
-////                printf("counter=%i\n", preamble_counter);
-//                preamble_counter = 0;
-//            }
-//        }
-//
-//        WAIT_FOR_CLOCK
-//    }
+    int preamble_counter = 0;
+    while(1)
+    {
+        sched_yield();
+        size_t d = MEASSURE(array + 2 * 1024);
+        d = d SATISFIES THRESHHOLD ? 1lu : 0lu;
+
+        if(preamble_counter < 7 * 8 + 7)
+        {
+            if(d == preamble_counter % 2)
+            {
+                // wrong bit
+                //printf("counter=%i\n", preamble_counter);
+                preamble_counter = 0;
+            }
+            else
+            {
+                // correct bit
+                preamble_counter++;
+            }
+        }
+        else
+        {
+            if(d == 1)
+            {
+                break;
+            }
+            else
+            {
+                printf("counter=%i\n", preamble_counter);
+                preamble_counter = 0;
+                printf("hop\n");
+            }
+        }
+
+        WAIT_FOR_CLOCK
+    }
     while(1)
     {
         sched_yield();
         size_t d = MEASSURE(array + 2 * 1024);
 
-        output_stream[i++] = d;
+        output_stream[i++ -1] = d;
 
         if(i == STREAM_LENGTH)
             return NULL;
