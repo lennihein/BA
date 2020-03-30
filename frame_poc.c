@@ -5,7 +5,7 @@
 
 // EDIT THIS!
 #define METHOD 0
-#define STREAM_LENGTH 100
+#define STREAM_LENGTH 2048*4
 #define THRESHHOLD 190
 #define INTERVAL 100000 //0.1ms -> 10KHz
 /***************************/
@@ -209,6 +209,7 @@ void* receiver(void* _)
         {
             if(d == 1)
             {
+                WAIT_FOR_CLOCK
                 break;
             }
             else
@@ -226,7 +227,7 @@ void* receiver(void* _)
         sched_yield();
         size_t d = MEASSURE(array + 2 * 1024);
 
-        output_stream[i++ -1] = d;
+        output_stream[i++] = d;
 
         if(i == STREAM_LENGTH)
             return NULL;
