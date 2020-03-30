@@ -114,7 +114,7 @@ void* sender(void* _)
 
     loop:
     usleep(1000);
-
+    printf("send...\n");
     clock_gettime(CLOCK_MONOTONIC, &t);
     target = t.tv_sec * 1000000000;
     target += t.tv_nsec;
@@ -214,9 +214,7 @@ void* receiver(void* _)
             }
             else
             {
-                printf("counter=%i\n", preamble_counter);
                 preamble_counter = 0;
-                printf("hop\n");
             }
         }
 
