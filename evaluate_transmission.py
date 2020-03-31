@@ -11,7 +11,8 @@ act = act_file.readlines()
 
 STREAM_LENGTH = len(pred)
 
-if len(act) != STREAM_LENGTH:
+if len(act) != len(pred):
+    print("ERROR: 'len(act) != len(pred)' (" + str(len(act)) + "-" + str(len(pred)) + ")")
     exit(1)
 
 # print confusion matrix

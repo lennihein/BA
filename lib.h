@@ -8,8 +8,10 @@
 #include <unistd.h>
 #include <string.h>
 
-size_t meassure_ff(size_t* addr);
-size_t meassure_fr(size_t* addr);
+#include "sharedlib.h"
+
+size_t meassure_ff(void (* addr)(void));
+size_t meassure_fr(void (* addr)(void));
 void flush(void* p);
 void maccess(void* p);
 

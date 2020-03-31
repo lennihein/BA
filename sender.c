@@ -6,7 +6,7 @@
 // EDIT THIS!
 #define METHOD 0
 #define STREAM_LENGTH 2048*4
-#define THRESHHOLD 190
+#define THRESHHOLD IRRELEVANT
 #define INTERVAL 100000 //0.1ms -> 10KHz
 /***************************/
 #define FLUSH_FLUSH_COMP >
@@ -24,10 +24,7 @@
 #define unlikely(expr) __builtin_expect(!!(expr), 0)
 /***************************/
 
-size_t array[5 * 1024];
-
 size_t input_stream[STREAM_LENGTH];
-size_t output_stream[STREAM_LENGTH];
 struct field // hope this aligns properly :o
 {
     size_t mac_addr[6 * 8];
@@ -39,68 +36,32 @@ struct field field_stream;
 
 void* sender(void* _);
 
-void* receiver(void* _);
-
 int main()
 {
-    printf("Transmitting thread-thread, with hardwareclock-sync and ethernet frames:\n\n"
+    printf("Sending thread-thread, with hardwareclock-sync and ethernet frames:\n\n"
            "- STREAM_LENGTH: %d\n"
-           "- METHOD: %s\n"
-           "- THRESHHOLD: %d\n",
-           STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", THRESHHOLD);
+           "- METHOD: %s\n",
+           STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload");
 
     //setup
-    memset(array, -1, 5 * 1024 * sizeof(size_t));
     srand(time(0));
     for(int i = 0; i < STREAM_LENGTH; i++)
     {
         input_stream[i] = rand() % 2;
     }
 
-    pthread_t s, r;
-    void* ret_val;
-    pthread_create(&r, NULL, receiver, NULL);
-    pthread_create(&s, NULL, sender, NULL);
-
-    pthread_join(r, &ret_val);
-    pthread_cancel(s);
-
-    {   // evaluation and print
-        size_t TP_counter = 0;
-        size_t TN_counter = 0;
-        size_t FP_counter = 0;
-        size_t FN_counter = 0;
-
-        FILE* f_pred = fopen("pred.txt", "w");
+    {   // print
         FILE* f_act = fopen("act.txt", "w");
         for(int i = 0; i < STREAM_LENGTH; i++)
         {
-            fprintf(f_pred, "%lu\n", output_stream[i] SATISFIES THRESHHOLD ? 1lu : 0lu);
             fprintf(f_act, "%lu\n", input_stream[i]);
-            if(input_stream[i] == output_stream[i] SATISFIES THRESHHOLD ? 1lu : 0lu)
-            {
-                if(input_stream[i] == 1)
-                    TP_counter++;
-                else    
-                    TN_counter++;
-            }
-            else
-            {
-                if(input_stream[i] == 1)
-                    FN_counter++;
-                else
-                    FP_counter++;
-            }
         }
-        fclose(f_pred);
         fclose(f_act);
-        fprintf(stdout, "Accuracy: %lf%%\n", ((double) (TP_counter + TN_counter) * 100) / (STREAM_LENGTH));
-        fprintf(stdout, "Accuracy (1s) aka Sensitivity: %lu/%zu = %lf%%\n", TP_counter, (FN_counter + TP_counter),
-                ((double) (TP_counter) * 100) / (double) (FN_counter + TP_counter));
-        fprintf(stdout, "Accuracy (0s) aka Specificity: %lu/%zu = %lf%%\n", TN_counter, (FP_counter + TN_counter),
-                ((double) (TN_counter) * 100) / (double) (FP_counter + TN_counter));
     }
 
+    pthread_t s;
+    pthread_create(&s, NULL, sender, NULL);
+    pthread_join(s, NULL);
     return 0;
 }
 
@@ -178,57 +139,3 @@ void* sender(void* _)
     return NULL;
 }
 #pragma clang diagnostic pop
-
-void* receiver(void* _)
-{
-    INIT_CLOCK
-    int i = 0;
-    int preamble_counter = 0;
-    while(1)
-    {
-        sched_yield();
-        size_t d = MEASSURE(function + 64);
-        d = d SATISFIES THRESHHOLD ? 1lu : 0lu;
-
-        if(preamble_counter < 7 * 8 + 7)
-        {
-            if(d == preamble_counter % 2)
-            {
-                // wrong bit
-                //printf("counter=%i\n", preamble_counter);
-                preamble_counter = 0;
-            }
-            else
-            {
-                // correct bit
-                preamble_counter++;
-            }
-        }
-        else
-        {
-            if(d == 1)
-            {
-                WAIT_FOR_CLOCK
-                break;
-            }
-            else
-            {
-                preamble_counter -= 2;
-            }
-        }
-
-        WAIT_FOR_CLOCK
-    }
-    while(1)
-    {
-        sched_yield();
-        size_t d = MEASSURE(function + 64);
-
-        output_stream[i++] = d;
-
-        if(i == STREAM_LENGTH)
-            return NULL;
-
-        WAIT_FOR_CLOCK
-    }
-}

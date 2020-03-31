@@ -1,6 +1,6 @@
 #include "lib.h"
 
-size_t meassure_ff(size_t* addr)
+size_t meassure_ff(void (* addr)(void))
 {
     uint64_t start_high, start_low,
             end_high, end_low;
@@ -41,7 +41,7 @@ size_t meassure_ff(size_t* addr)
 
 }
 
-size_t meassure_fr(size_t* addr)
+size_t meassure_fr(void (* addr)(void))
 {
     uint64_t start_high, start_low,
             end_high, end_low;
