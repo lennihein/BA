@@ -5,7 +5,7 @@
 
 // EDIT THIS!
 #define METHOD 0
-#define STREAM_LENGTH 2048*4
+#define STREAM_LENGTH 1024*8
 #define THRESHHOLD 190
 #define INTERVAL 100000 //0.1ms -> 10KHz
 /***************************/
@@ -24,15 +24,17 @@
 #define unlikely(expr) __builtin_expect(!!(expr), 0)
 /***************************/
 
-size_t output_stream[STREAM_LENGTH];
-struct field // hope this aligns properly :o
+struct field
 {
+    size_t sync[7 * 8];
+    size_t delimiter[8];
     size_t mac_addr[6 * 8];
     size_t mac_src[6 * 8];
     size_t tag[4 * 8];
     size_t length[2 * 8];
+    size_t payload[(1500 + 5) * 8];
 };
-struct field field_stream;
+struct field frame;
 
 void* receiver(void* _);
 
@@ -52,7 +54,7 @@ int main()
         FILE* f_pred = fopen("pred.txt", "w");
         for(int i = 0; i < STREAM_LENGTH; i++)
         {
-            fprintf(f_pred, "%lu\n", output_stream[i] SATISFIES THRESHHOLD ? 1lu : 0lu);
+            fprintf(f_pred, "%lu\n", frame.payload[i] SATISFIES THRESHHOLD ? 1lu : 0lu);
         }
         fclose(f_pred);
     }
@@ -75,13 +77,12 @@ void* receiver(void* _)
         {
             if(d == preamble_counter % 2)
             {
-                // wrong bit
-                //printf("counter=%i\n", preamble_counter);
+                // wrong sync bit
                 preamble_counter = 0;
             }
             else
             {
-                // correct bit
+                // correct sync bit
                 preamble_counter++;
             }
         }
@@ -89,23 +90,35 @@ void* receiver(void* _)
         {
             if(d == 1)
             {
+                // preamble done
                 WAIT_FOR_CLOCK
                 break;
             }
             else
             {
+                // still in Sync
                 preamble_counter -= 2;
             }
         }
 
         WAIT_FOR_CLOCK
     }
+
+    for(int j = 0; j < (6 + 6 + 4 + 2) * 8; j++)
+    {
+        sched_yield();
+        size_t d = MEASSURE(function + 64);
+
+        frame.mac_addr[j] = d;
+        WAIT_FOR_CLOCK;
+    }
+
     while(1)
     {
         sched_yield();
         size_t d = MEASSURE(function + 64);
 
-        output_stream[i++] = d;
+        frame.payload[i++] = d;
 
         if(i == STREAM_LENGTH)
             return NULL;

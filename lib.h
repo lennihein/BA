@@ -7,6 +7,7 @@
 #include <semaphore.h>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
 
 #include "sharedlib.h"
 
@@ -14,8 +15,6 @@ size_t meassure_ff(void (* addr)(void));
 size_t meassure_fr(void (* addr)(void));
 void flush(void* p);
 void maccess(void* p);
-
-#define MIN(X,Y) (((X) < (Y)) ? (X) : (Y))
 
 #define WAIT_FOR_CLOCK                                                  \
 nanosecs = INTERVAL;                                                    \
