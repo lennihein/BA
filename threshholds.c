@@ -120,7 +120,7 @@ void* receiver_hit(void* data)
         sem_wait(&sent);
 
         sched_yield();
-        size_t d = MEASSURE(array + 2 * 1024);
+        size_t d = MEASSURE((void(*)(void))array + 2 * 1024);
 
         hit_data[i]=d;
 
@@ -137,7 +137,7 @@ void* receiver_miss(void* data)
         sem_wait(&sent);
 
         sched_yield();
-        size_t d = MEASSURE(array + 2 * 1024);
+        size_t d = MEASSURE((void(*)(void))array + 2 * 1024);
 
         miss_data[i]=d;
     }
