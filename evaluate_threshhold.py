@@ -12,25 +12,13 @@ def solve(m1, m2, std1, std2):
     return np.roots([a, b, c])
 
 
-with open('threshholds_out_new.txt', 'r') as f:
-    lines = f.readlines()
-    NUMBEROFPOINTS = int(lines[0])
-    if lines[1] == "ff\n":
-        method = "ff"
-        print("Evaluating FLUSH+FLUSH data")
-    elif lines[1] == "fr\n":
-        method = "fr"
-        print("Evaluating FLUSH+RELOAD data")
-    else:
-        print("WTF1: method is ", lines[1])
-        exit(1)
+with open('groupA.txt', 'r') as f1:
+    hits = f1.readlines()
+    hits = [int(i) for i in hits]
 
-    if len(lines) != NUMBEROFPOINTS * 2 + 1 + 1:
-        print("WTF2")
-        exit(1)
-
-    hits = [int(i) for i in lines[1 + 1:(NUMBEROFPOINTS + 1 + 1)]]
-    misses = [int(i) for i in lines[(NUMBEROFPOINTS + 1 + 1):(NUMBEROFPOINTS * 2 + 1 + 1)]]
+with open('groupB.txt') as f2:
+    misses = f2.readlines()
+    misses = [int(i) for i in misses]
 
 misses = [min(1000, i) for i in misses]
 hits = [min(1000, i) for i in hits]
@@ -44,13 +32,21 @@ mu_miss, std_miss = norm.fit(misses)
 # fit for Hits
 mu_hit, std_hit = norm.fit(hits)
 
+if mu_miss > mu_hit:
+    (misses, hits) = (hits, misses)
+    # fit for Misses
+    mu_miss, std_miss = norm.fit(misses)
+
+    # fit for Hits
+    mu_hit, std_hit = norm.fit(hits)
+    if mu_miss > mu_hit:
+        print("WTF")
+        exit(1)
+
 plt.hist(hits, bins=200, density=True, alpha=0.6, color='g', label="Hits")
 plt.hist(misses, bins=200, density=True, alpha=0.6, color='r', label="Misses")
 
-if method == "ff":
-    plt.xlim(120, 220)
-else:
-    plt.xlim(50, 1000)
+plt.xlim(140, 180)
 xmin, xmax = plt.xlim()
 x = np.linspace(xmin, xmax, 100)
 p1 = norm.pdf(x, mu_hit, std_hit)
@@ -70,6 +66,11 @@ result = solve(mu_hit, mu_miss, std_hit, std_miss)
 # Misses are to be seen as 0
 # therefore everything  <= threshhold is Miss
 #           everything > threshhold is Hit
+
+method = "ff"
+NUMBEROFPOINTS = len(hits)
+print(len(hits))
+print(len(misses))
 
 max_acc = 0
 best_threshhold = 0
