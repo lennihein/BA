@@ -74,6 +74,7 @@ int main()
     for(int i = 0; i < STREAM_LENGTH; i++)
     {
         frame.payload[i] = rand() % 2;
+        frame.payload[i] = i % 2;
     }
 
     // write message to file
@@ -113,7 +114,7 @@ int main()
 
     while(state.cond)
     {
-        if(state.output)
+        if(state.counter % 2)
         {
             maccess(function + 64);
         }
@@ -122,7 +123,6 @@ int main()
             flush(function + 64);
         }
     }
-
     printf("Sent over frame\n");
     state.cond = 1;
     state.counter = 0;
@@ -132,10 +132,10 @@ int main()
 
 void signal_handler(int _)
 {
-    state.output = frame.sync[state.counter];
+//    state.output = frame.sync[state.counter];
     state.counter++;
-    if(state.counter == state.frame_length)
-    {
-        state.cond = 0;
-    }
+//    if(state.counter == state.frame_length)
+//    {
+//        state.cond = 0;
+//    }
 }

@@ -7,7 +7,7 @@
 #define METHOD FLUSH_FLUSH
 /*******************/
 
-#define NUMBER_OF_POINTS 1024*1024*1
+#define NUMBER_OF_POINTS 1024*1024*8
 /***************************/
 #define FLUSH_FLUSH_COMP >=
 #define FLUSH_RELOAD_COMP <=
