@@ -103,9 +103,10 @@ int main()
     // calculate length of frame
 
 
-    struct sigaction sig;
-    sig.sa_handler = signal_handler;
-    sigaction(SIGALRM, &sig, NULL);
+
+    signal(SIGALRM, signal_handler);
+
+
     ualarm(INTERVAL, INTERVAL);
 
     loop:
