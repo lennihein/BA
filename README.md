@@ -24,12 +24,16 @@ pip3 install numpy scipy matplotlib sklearn
 ```bash
 cmake .
 make
-./threshholds
-# 'python3' on Ubuntu
+taskset 0x1 ./meassure_send &
+taskset 0x1 ./meassure_recv
+pkill meassure_send
+# 'python3' on Ubuntu Versions < 20
 python evaluate_threshholds
-# edit threshholds in poc_sync.c
+# edit threshholds in receiver.c
 make
-./poc_sync
-# 'python3' on Ubuntu
+taskset 0x1 ./sender &
+taskset 0x1 ./receiver
+pkill sender
+# 'python3' on Ubuntu Versions < 20
 python evaluate_transmission
 ```

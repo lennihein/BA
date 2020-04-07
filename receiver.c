@@ -6,7 +6,6 @@
 // EDIT THIS!
 #define METHOD 1
 #define STREAM_LENGTH 1024*8
-#define THRESHHOLD 160
 #define INTERVAL 100000 //0.1ms -> 10KHz
 /***************************/
 #define FLUSH_FLUSH_COMP >
@@ -36,14 +35,25 @@ struct field
 };
 struct field frame;
 
+size_t THRESHHOLD;
+
 void* receiver(void* _);
 
-int main()
+int main(int argc, char* argv[])
 {
+    if(argc == 2)
+    {
+        THRESHHOLD = strtoll(argv[1], NULL, 10);
+    }
+    else
+    {
+        fprintf(stderr, "BIG ASS ERROR\n");
+        exit(1);
+    }
     printf("Receiving process->process, with hardwareclock-sync and ethernet frames:\n\n"
            "- STREAM_LENGTH: %d\n"
            "- METHOD: %s\n"
-           "- THRESHHOLD: %d\n",
+           "- THRESHHOLD: %zu\n",
            STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", THRESHHOLD);
 
     pthread_t r;

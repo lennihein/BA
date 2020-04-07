@@ -6,7 +6,6 @@
 // EDIT THIS!
 #define METHOD 0
 #define STREAM_LENGTH 1024*8
-#define THRESHHOLD IRRELEVANT
 #define INTERVAL 100 //0.1ms -> 10KHz
 /***************************/
 #define FLUSH_FLUSH_COMP >
