@@ -20,33 +20,51 @@ with open('groupB.txt') as f2:
     misses = f2.readlines()
     misses = [int(i) for i in misses]
 
-misses = [min(1000, i) for i in misses]
-hits = [min(1000, i) for i in hits]
 
 # Keep only the "good" points
-# "~" operates as a logical not operator on boolean numpy arrays
+# misses = [min(1000, i) for i in misses]
+# hits = [min(1000, i) for i in hits]
+
+hits_cleaned = np.array(hits)
+misses_cleaned = np.array(misses)
+
+deviations = 10
+
+d_hits_cleaned = np.abs(hits_cleaned - np.median(hits_cleaned))
+med_abs_dev_hits_cleaned = np.median(d_hits_cleaned)
+if med_abs_dev_hits_cleaned != 0:
+    s_hits_cleaned = d_hits_cleaned / med_abs_dev_hits_cleaned
+    hits_cleaned = hits_cleaned[s_hits_cleaned < deviations]
+
+d_misses_cleaned = np.abs(misses_cleaned - np.median(misses_cleaned))
+med_abs_dev_misses_cleaned = np.median(d_misses_cleaned)
+if med_abs_dev_misses_cleaned != 0:
+    s_misses_cleaned = d_misses_cleaned / med_abs_dev_misses_cleaned
+    misses_cleaned = misses_cleaned[s_misses_cleaned < deviations]
 
 # fit for Misses
-mu_miss, std_miss = norm.fit(misses)
+mu_miss, std_miss = norm.fit(misses_cleaned)
 
 # fit for Hits
-mu_hit, std_hit = norm.fit(hits)
+mu_hit, std_hit = norm.fit(hits_cleaned)
 
 if mu_miss > mu_hit:
     (misses, hits) = (hits, misses)
+    (misses_cleaned, hits_cleaned) = (hits_cleaned, misses_cleaned)
+
     # fit for Misses
-    mu_miss, std_miss = norm.fit(misses)
+    mu_miss, std_miss = norm.fit(misses_cleaned)
 
     # fit for Hits
-    mu_hit, std_hit = norm.fit(hits)
+    mu_hit, std_hit = norm.fit(hits_cleaned)
     if mu_miss > mu_hit:
         print("WTF")
         exit(1)
 
-plt.hist(hits, bins=200, density=True, alpha=0.6, color='g', label="Hits")
-plt.hist(misses, bins=200, density=True, alpha=0.6, color='r', label="Misses")
+plt.hist(hits_cleaned, bins=10, density=True, alpha=0.6, color='g', label="Hits")
+plt.hist(misses_cleaned, bins=10, density=True, alpha=0.6, color='r', label="Misses")
 
-plt.xlim(140, 180)
+plt.xlim(min(min(hits_cleaned), min(misses_cleaned)) - 5, max(max(hits_cleaned), max(misses_cleaned)) + 5)
 xmin, xmax = plt.xlim()
 x = np.linspace(xmin, xmax, 100)
 p1 = norm.pdf(x, mu_hit, std_hit)
