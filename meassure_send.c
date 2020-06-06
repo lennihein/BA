@@ -4,10 +4,11 @@
 #define FLUSH_RELOAD 0
 
 // EDIT THIS!
-#define METHOD 0
+#define METHOD 1
 #define STREAM_LENGTH 1024*8
 #define THRESHHOLD IRRELEVANT
-#define INTERVAL 100 //0.1ms -> 10KHz
+#define FREQUENCY 100
+#define INTERVAL 1000000/FREQUENCY //0.1ms -> 10KHz
 /***************************/
 #define FLUSH_FLUSH_COMP >
 #define FLUSH_RELOAD_COMP <=
