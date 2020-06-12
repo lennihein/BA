@@ -61,8 +61,8 @@ if mu_miss > mu_hit:
         print("WTF")
         exit(1)
 
-plt.hist(hits, bins=10, density=True, alpha=0.6, color='g', label="Hits")
-plt.hist(misses, bins=10, density=True, alpha=0.6, color='r', label="Misses")
+plt.hist(hits, bins=100, density=True, alpha=0.6, color='g', label="Hits")
+plt.hist(misses, bins=100, density=True, alpha=0.6, color='r', label="Misses")
 
 plt.xlim(min(min(hits_cleaned), min(misses_cleaned)) - 5, max(max(hits_cleaned), max(misses_cleaned)) + 5)
 xmin, xmax = plt.xlim()

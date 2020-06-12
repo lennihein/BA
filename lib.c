@@ -2,83 +2,44 @@
 
 size_t meassure_ff(void (* addr)(void))
 {
-    uint64_t start_high, start_low,
-            end_high, end_low;
+    uint64_t start, end, delta;
+    uint64_t lo, hi;
+    asm volatile ("LFENCE");
+    asm volatile ("RDTSC": "=a" (lo), "=d" (hi));
+    start = (hi<<32) | lo;
+    asm volatile ("LFENCE");
 
-    asm volatile
-    (
-    "mfence\n\t"
-    "CPUID\n\t"
-    "RDTSC\n\t"
-    "mov %%rdx, %0\n\t"
-    "mov %%rax, %1\n\t"
-    "mfence\n\t"
-    :
-    "=r" (start_high),
-    "=r" (start_low)
-    ::
-    "%rax", "%rbx", "%rcx", "%rdx"
-    );
+    asm volatile ("CLFLUSH 0(%0)\n":: "c" (addr): "rax");
 
-    flush(addr);
-
-    asm volatile
-    (
-    "mfence\n\t"
-    "RDTSCP\n\t"
-    "mov %%rdx, %0\n\t"
-    "mov %%rax, %1\n\t"
-    "CPUID\n\t"
-    "mfence\n\t"
-    :
-    "=r" (end_high),
-    "=r" (end_low)
-    ::
-    "%rax", "%rbx", "%rcx", "%rdx"
-    );
-
-    return ((end_high << 32) | end_low) - ((start_high << 32) | start_low);
+    asm volatile ("MFENCE");
+    asm volatile ("RDTSC": "=a" (lo), "=d" (hi));
+    end = (hi<<32) | lo;
+    asm volatile ("LFENCE");
+    delta = end - start;
+    return delta;
 
 }
 
 size_t meassure_fr(void (* addr)(void))
 {
-    uint64_t start_high, start_low,
-            end_high, end_low;
+    uint64_t start, end, delta;
+    uint64_t lo, hi;
+    asm volatile ("LFENCE");
+    asm volatile ("RDTSC": "=a" (lo), "=d" (hi));
+    start = (hi<<32) | lo;
+    asm volatile ("LFENCE");
 
-    asm volatile
-    (
-    "mfence\n\t"
-    "CPUID\n\t"
-    "RDTSC\n\t"
-    "mov %%rdx, %0\n\t"
-    "mov %%rax, %1\n\t"
-    "mfence\n\t"
+    asm volatile ("movq (%0), %%rax\n"
     :
-    "=r" (start_high),
-    "=r" (start_low)
-    ::
-    "%rax", "%rbx", "%rcx", "%rdx"
-    );
+    : "c" (addr)
+    : "rax");
 
-    maccess(addr);
-
-    asm volatile
-    (
-    "mfence\n\t"
-    "RDTSCP\n\t"
-    "mov %%rdx, %0\n\t"
-    "mov %%rax, %1\n\t"
-    "CPUID\n\t"
-    "mfence\n\t"
-    :
-    "=r" (end_high),
-    "=r" (end_low)
-    ::
-    "%rax", "%rbx", "%rcx", "%rdx"
-    );
-
-    return ((end_high << 32) | end_low) - ((start_high << 32) | start_low);
+    asm volatile ("LFENCE");
+    asm volatile ("RDTSC": "=a" (lo), "=d" (hi));
+    end = (hi<<32) | lo;
+    asm volatile ("LFENCE");
+    delta = end - start;
+    return delta;
 }
 
 // following code is taken from D. Gruss
