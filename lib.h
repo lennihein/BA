@@ -29,3 +29,6 @@ clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &t0, NULL);
 struct timespec t0;                                                     \
 clock_gettime(CLOCK_MONOTONIC, &t0);                                    \
 uint32_t nanosecs;
+
+#define FLUSH_FLUSH 1
+#define FLUSH_RELOAD 0

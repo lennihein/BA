@@ -34,7 +34,7 @@ int main()
            "- STREAM_LENGTH: %d\n"
            "- METHOD: %s\n"
            "- Interval in usec: %d\n",
-           STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", INTERVAL);
+           STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", INTERVAL/1000);
 
     pthread_t r;
     pthread_create(&r, NULL, receiver, NULL);
