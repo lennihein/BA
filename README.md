@@ -6,7 +6,7 @@ as root:
 
 ```bash
 sudo pacman -Syu python python-pip gcc cmake make
-pip install numpy scipy matplotlib sklearn
+pip install numpy matplotlib sklearn
 ```
 
 ## Prerequisites on Ubuntu
@@ -16,7 +16,7 @@ as root:
 ```bash
 apt update
 apt install cmake python3-pip
-pip3 install numpy scipy matplotlib sklearn
+pip3 install numpy matplotlib sklearn
 ```
 
 ## Instructions for prototype

@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.stats import norm
 import matplotlib.pyplot as plt
 from sklearn import metrics
 
@@ -43,11 +42,9 @@ if med_abs_dev_misses_cleaned != 0:
     misses_cleaned = misses_cleaned[s_misses_cleaned < deviations]
 
 # fit for Misses
-mu_miss, std_miss = norm.fit(misses_cleaned)
 mu_miss, std_miss = np.mean(misses_cleaned), np.std(misses_cleaned)
 
 # fit for Hits
-mu_hit, std_hit = norm.fit(hits_cleaned)
 mu_hit, std_hit = np.mean(hits_cleaned), np.std(hits_cleaned)
 
 if mu_miss > mu_hit:
