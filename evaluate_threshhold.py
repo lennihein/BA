@@ -44,9 +44,11 @@ if med_abs_dev_misses_cleaned != 0:
 
 # fit for Misses
 mu_miss, std_miss = norm.fit(misses_cleaned)
+mu_miss, std_miss = np.mean(misses_cleaned), np.std(misses_cleaned)
 
 # fit for Hits
 mu_hit, std_hit = norm.fit(hits_cleaned)
+mu_hit, std_hit = np.mean(hits_cleaned), np.std(hits_cleaned)
 
 if mu_miss > mu_hit:
     (misses, hits) = (hits, misses)
@@ -61,8 +63,8 @@ if mu_miss > mu_hit:
         print("WTF")
         exit(1)
 
-plt.hist(hits, bins=100, density=True, alpha=0.6, color='g', label="Hits")
-plt.hist(misses, bins=100, density=True, alpha=0.6, color='r', label="Misses")
+plt.hist(hits, density=True, align="mid", alpha=0.6, color='g', label="Hits")
+plt.hist(misses, density=True, align="mid", histtype="barstacked", alpha=0.6, color='r', label="Misses")
 
 plt.xlim(min(min(hits_cleaned), min(misses_cleaned)) - 5, max(max(hits_cleaned), max(misses_cleaned)) + 5)
 xmin, xmax = plt.xlim()
