@@ -32,7 +32,8 @@ python evaluate_threshholds
 # edit threshholds in receiver.c
 make
 taskset 0x1 ./sender &
-taskset 0x1 ./receiver
+# choose a reasonable THRESHHOLD
+taskset 0x1 ./receiver [THRESHHOLD]
 pkill sender
 # 'python3' on Ubuntu Versions < 20
 python evaluate_transmission
