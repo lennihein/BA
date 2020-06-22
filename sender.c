@@ -1,9 +1,9 @@
 #include "lib.h"
 #include "crc.h"
 
-#define METHOD FLUSH_RELOAD
-#define STREAM_LENGTH 1024*8
-#define FREQUENCY 100
+#define METHOD 0
+#define STREAM_LENGTH 1000
+#define FREQUENCY 1000
 /***************************/
 #define INTERVAL 1000000/FREQUENCY
 #if METHOD == FLUSH_FLUSH
@@ -91,15 +91,15 @@ int main()
     // sending the length little-endian
     for(int i = 0; i < 16; i++)
     {
-        frame.length[i] = (length>>15-i) & 0x1;
+        frame.length[i] = (length>>(15-i)) & 0x1;
     }
 
-    // set length
+    // set checksum
     crc checksum = crcFast(frame.mac_addr, sizeof(size_t) * ((6+6+2)*8 + state.message_length));
     // sending the checksum little-endian
     for(int i = 0; i < 32; i++)
     {
-        frame.payload[state.message_length+i] = (checksum>>31-i) & 0x1;
+        frame.payload[state.message_length+i] = (checksum>>(31-i)) & 0x1;
     }
 
     // start signal handler

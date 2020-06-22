@@ -2,9 +2,9 @@
 #include "crc.h"
 
 // EDIT THIS!
-#define METHOD 1
-#define STREAM_LENGTH 1024*8
-#define FREQUENCY 100
+#define METHOD 0
+#define STREAM_LENGTH 1000
+#define FREQUENCY 1000
 /***************************/
 #define INTERVAL 1000000000/FREQUENCY
 #if METHOD == FLUSH_FLUSH
@@ -32,6 +32,7 @@ struct field frame;
 
 size_t threshhold;
 uint16_t length = 0;
+uint32_t checksum = 0;
 
 void* receiver(void* _);
 
@@ -59,7 +60,7 @@ int main(int argc, char* argv[])
     // retrieve length
     for(int i=0; i<16; i++)
     {
-        length |= frame.length[i]<<15-i;
+        length |= (frame.length[i] SATISFIES threshhold ? 1lu : 0lu)<<15-i;
     }
 
     // check length:
@@ -71,11 +72,11 @@ int main(int argc, char* argv[])
     // retieve checksum:
     for(int i=0; i<32; i++)
     {
-        checksum |= frame.payload[i+STREAM_LENGTH]<<31-i;
+        checksum |= (frame.payload[i + STREAM_LENGTH] SATISFIES threshhold ? 1lu : 0lu)<< (31 - i);
     }
 
     // check checksum:
-    if(checksum!=crcFast(frame.mac_addr, sizeof(size_t) * ((6+6+2)*8 + STREAM_LENGTH))
+    if(checksum!=crcFast((const unsigned char*) frame.mac_addr, sizeof(size_t) * ((6 + 6 + 2) * 8 + STREAM_LENGTH)))
     {
         fprintf(stderr, "checksum not matching\n");
     }

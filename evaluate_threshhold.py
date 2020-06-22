@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.stats import norm
 from sklearn import metrics
 
 
@@ -52,10 +53,10 @@ if mu_miss > mu_hit:
     (misses_cleaned, hits_cleaned) = (hits_cleaned, misses_cleaned)
 
     # fit for Misses
-    mu_miss, std_miss = norm.fit(misses_cleaned)
+    mu_miss, std_miss = np.mean(misses_cleaned), np.std(misses_cleaned)
 
     # fit for Hits
-    mu_hit, std_hit = norm.fit(hits_cleaned)
+    mu_hit, std_hit = np.mean(hits_cleaned), np.std(hits_cleaned)
     if mu_miss > mu_hit:
         print("WTF")
         exit(1)
