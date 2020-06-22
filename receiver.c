@@ -1,10 +1,9 @@
 #include "lib.h"
 #include "crc.h"
 
-// EDIT THIS!
-#define METHOD 0
-#define STREAM_LENGTH 1000
-#define FREQUENCY 1000
+#include "CONFIG.H"
+#define STREAM_LENGTH PACKET_LENGTH
+
 /***************************/
 #define INTERVAL 1000000000/FREQUENCY
 #if METHOD == FLUSH_FLUSH

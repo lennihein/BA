@@ -1,0 +1,4 @@
+#define METHOD 0
+#define TEST_LENGTH 1024*8
+#define PACKET_LENGTH 1000
+#define FREQUENCY 1000

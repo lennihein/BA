@@ -3,12 +3,11 @@
 #define FLUSH_FLUSH 1
 #define FLUSH_RELOAD 0
 
-// EDIT THIS!
-#define METHOD 0
-#define STREAM_LENGTH 1024*8
-#define FREQUENCY 1000
-#define INTERVAL 1000000000/FREQUENCY
+#include "CONFIG.H"
+#define STREAM_LENGTH TEST_LENGTH
+
 /***************************/
+#define INTERVAL 1000000000/FREQUENCY
 #define FLUSH_FLUSH_COMP >
 #define FLUSH_RELOAD_COMP <=
 #define FLUSH_RELOAD_MEASSURE meassure_fr
