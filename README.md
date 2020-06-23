@@ -19,22 +19,29 @@ apt install cmake python3-pip
 pip3 install numpy matplotlib sklearn
 ```
 
-## Instructions for prototype
-
+## Instructions: compilation
+```bash
 ```bash
 cmake .
 make
-taskset 0x1 ./meassure_send &
-taskset 0x1 ./meassure_recv
+```
+
+## Instructions: finding the threshhold
+
+```bash
+taskset 0x1 ./meassure_send [FREQUENCY] &
+taskset 0x1 ./meassure_recv [FREQUENCY] [TESTPOINTS]
 pkill meassure_send
 # 'python3' on Ubuntu Versions < 20
-python evaluate_threshholds
-# edit threshholds in receiver.c
-make
-taskset 0x1 ./sender &
-# choose a reasonable THRESHHOLD
-taskset 0x1 ./receiver [THRESHHOLD]
+python evaluate_threshholds.py
+```
+
+## Instructions: transmitting data
+
+```bash
+taskset 1 ./sender [FREQUENCY] [PACKETLENGTH] &
+taskset 1 ./receiver [-ff/-fr] [THRESHHOLD] [FREQUENCY] [PACKETLENGTH]
 pkill sender
 # 'python3' on Ubuntu Versions < 20
-python evaluate_transmission
+python evaluate_transmission.py
 ```
