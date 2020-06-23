@@ -1,21 +1,7 @@
 #include "lib.h"
 #include "crc.h"
 
-#include "CONFIG.H"
-#define STREAM_LENGTH PACKET_LENGTH
-
-/***************************/
-#define INTERVAL 1000000000/FREQUENCY
-#if METHOD == FLUSH_FLUSH
-#define SATISFIES >
-#define MEASSURE meassure_ff
-#endif
-#if METHOD == FLUSH_RELOAD
-#define SATISFIES <=
-#define MEASSURE meassure_fr
-#endif
-#define unlikely(expr) __builtin_expect(!!(expr), 0)
-/***************************/
+#define eval(x) method?(x>threshhold?1:0):(x<=threshhold?1:0)
 
 struct field
 {
@@ -30,28 +16,59 @@ struct field
 struct field frame;
 
 size_t threshhold;
-uint16_t length = 0;
-uint32_t checksum = 0;
+size_t method, length;
+size_t (*meassure)(void (* addr)(void));
+size_t frequency, interval;
+uint16_t length_ = 0;
+uint32_t checksum_ = 0;
 
 void* receiver(void* _);
 
 int main(int argc, char* argv[])
 {
-    if(argc == 2)
+    if(argc == 5)
     {
-        threshhold = strtoll(argv[1], NULL, 10);
+        if(strcmp(argv[1], "-ff")==0)
+        {
+            method = FLUSH_FLUSH;
+            meassure = meassure_ff;
+        }
+        else
+        {
+            if(strcmp(argv[1], "-fr")==0)
+            {
+                method = FLUSH_RELOAD;
+                meassure = meassure_fr;
+            }
+            else
+            {
+                goto invalid;
+            }
+        }
+
+        threshhold = strtoll(argv[2], NULL, 10);
+        if(threshhold==0) goto invalid;
+
+        frequency = strtoll(argv[3], NULL, 10);
+        if(frequency==0) goto invalid;
+        // interval in nsecs
+        interval = 1000000000/frequency;
+
+        length = strtoll(argv[4], NULL, 10);
+        if(length==0) goto invalid;
     }
     else
     {
-        fprintf(stderr, "usage: ./receiver [TRESHHOLD]\n");
+        invalid:
+        fprintf(stderr, "usage: ./meassure_recv [-ff/-fr] [THRESHHOLD] [FREQUENCY] [TESTPOINTS]\n");
         exit(1);
     }
     printf("Receiving process->process, with hardwareclock-sync and ethernet frames:\n"
            "- Frequency in Hz: %zu\n"
-           "- Paket Length: %d\n"
+           "- Paket Length: %zu\n"
            "- Method: %s\n"
            "- Threshhold: %zu\n",
-           FREQUENCY, STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", threshhold);
+           frequency, length, method == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", threshhold);
 
     pthread_t r;
     pthread_create(&r, NULL, receiver, NULL);
@@ -60,23 +77,27 @@ int main(int argc, char* argv[])
     // retrieve length
     for(int i=0; i<16; i++)
     {
-        length |= (frame.length[i] SATISFIES threshhold ? 1lu : 0lu)<<15-i;
+        length_ |= eval(frame.length[i])<<(15-i);
     }
 
     // check length:
-    if(STREAM_LENGTH!=length)
+    if(length!=length_)
     {
-        fprintf(stderr, "length not matching\n");
+        fprintf(stderr, "length not matching: %lu(arg) - %hu(transmitted)\n", length, length_);
+        for(int i=0; i<16; i++)
+        {
+            printf("%d\n", eval(frame.length[i]));
+        }
     }
 
     // retieve checksum:
     for(int i=0; i<32; i++)
     {
-        checksum |= (frame.payload[i + STREAM_LENGTH] SATISFIES threshhold ? 1lu : 0lu)<< (31 - i);
+        checksum_ |= eval(frame.payload[i + length])<< (31 - i);
     }
 
     // check checksum:
-    if(checksum!=crcFast((const unsigned char*) frame.mac_addr, sizeof(size_t) * ((6 + 6 + 2) * 8 + STREAM_LENGTH)))
+    if(checksum_!=crcFast((const unsigned char*) frame.mac_addr, sizeof(size_t) * ((6 + 6 + 2) * 8 + length)))
     {
         fprintf(stderr, "checksum not matching\n");
     }
@@ -84,9 +105,9 @@ int main(int argc, char* argv[])
     // prepare predictions
     {
         FILE* f_pred = fopen("pred.txt", "w");
-        for(int i = 0; i < STREAM_LENGTH; i++)
+        for(int i = 0; i < length; i++)
         {
-            fprintf(f_pred, "%lu\n", frame.payload[i] SATISFIES threshhold ? 1lu : 0lu);
+            fprintf(f_pred, "%d\n", eval(frame.payload[i]));
         }
         fclose(f_pred);
     }
@@ -102,8 +123,8 @@ void* receiver(void* _)
     while(1)
     {
         sched_yield();
-        size_t d = MEASSURE(function + 64);
-        d = d SATISFIES threshhold ? 1lu : 0lu;
+        size_t d = meassure(function + 64);
+        d = eval(d);
 
         if(preamble_counter < 7 * 8 + 7)
         {
@@ -139,7 +160,7 @@ void* receiver(void* _)
     for(int j = 0; j < (6 + 6 + 2) * 8; j++)
     {
         sched_yield();
-        size_t d = MEASSURE(function + 64);
+        size_t d = meassure(function + 64);
 
         frame.mac_addr[j] = d;
         WAIT_FOR_CLOCK;
@@ -148,11 +169,11 @@ void* receiver(void* _)
     while(1)
     {
         sched_yield();
-        size_t d = MEASSURE(function + 64);
+        size_t d = meassure(function + 64);
 
         frame.payload[i++] = d;
 
-        if(i == STREAM_LENGTH)
+        if(i == length)
             return NULL;
 
         WAIT_FOR_CLOCK

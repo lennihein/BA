@@ -1,42 +1,30 @@
 #include "lib.h"
 
-#define FLUSH_FLUSH 1
-#define FLUSH_RELOAD 0
-
-#include "CONFIG.H"
-#define STREAM_LENGTH TEST_LENGTH
-
-/***************************/
-#define INTERVAL 1000000/FREQUENCY
-#define FLUSH_FLUSH_COMP >
-#define FLUSH_RELOAD_COMP <=
-#define FLUSH_RELOAD_MEASSURE meassure_fr
-#define FLUSH_FLUSH_MEASSURE meassure_ff
-#if METHOD == FLUSH_FLUSH
-#define SATISFIES FLUSH_FLUSH_COMP
-#define MEASSURE FLUSH_FLUSH_MEASSURE
-#endif
-#if METHOD == FLUSH_RELOAD
-#define SATISFIES FLUSH_RELOAD_COMP
-#define MEASSURE FLUSH_RELOAD_MEASSURE
-#endif
-#define unlikely(expr) __builtin_expect(!!(expr), 0)
-/***************************/
-
 static size_t counter = 0;
-
 
 void signal_handler(int _);
 
-int main()
+int main(int argc, char* argv[])
 {
+    size_t frequency, interval;
+    if(argc == 2)
+    {
+        frequency = strtoll(argv[1], NULL, 10);
+        // interval in usecs
+        interval = 1000000/frequency;
+    }
+    else
+    {
+        fprintf(stderr, "usage: ./meassure_send [FREQUENCY]\n");
+        exit(1);
+    }
     printf("Sending alternating \'1\' and \'0\'\n- Frequency in Hz: %zu\n",
-           FREQUENCY);
+           frequency);
 
 
     signal(SIGALRM, signal_handler);
 
-    ualarm(INTERVAL, INTERVAL);
+    ualarm(interval, interval);
 
     loop:
 

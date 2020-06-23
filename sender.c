@@ -1,22 +1,6 @@
 #include "lib.h"
 #include "crc.h"
 
-#include "CONFIG.H"
-#define STREAM_LENGTH PACKET_LENGTH
-
-/***************************/
-#define INTERVAL 1000000/FREQUENCY
-#if METHOD == FLUSH_FLUSH
-#define SATISFIES >
-#define MEASSURE meassure_ff
-#endif
-#if METHOD == FLUSH_RELOAD
-#define SATISFIES <=
-#define MEASSURE meassure_fr
-#endif
-#define unlikely(expr) __builtin_expect(!!(expr), 0)
-/***************************/
-
 struct field
 {
     size_t sync[7 * 8];
@@ -40,33 +24,49 @@ struct state
 };
 
 struct state state;
+size_t length, frequency, interval;
 
 void signal_handler(int _);
 
-int main()
+int main(int argc, char* argv[])
 {
-    state.message_length = STREAM_LENGTH;
-    state.interval = INTERVAL;
+    if(argc == 3)
+    {
+        frequency = strtoll(argv[1], NULL, 10);
+        // interval in usecs
+        interval = 1000000/frequency;
+
+        length = strtoll(argv[2], NULL, 10);
+        if(length==0) goto invalid;
+    }
+    else
+    {
+        invalid:
+        fprintf(stderr, "usage: ./meassure_send [FREQUENCY] [PAKETLENGTH]\n");
+        exit(1);
+    }
+    state.message_length = length;
+    state.interval = interval;
     state.cond = 1;
     state.counter = 0;
     state.output = 0;
-    state.frame_length = (7 + 1 + 6 + 6 + 2) * 8 + STREAM_LENGTH + 4 * 8;
+    state.frame_length = (7 + 1 + 6 + 6 + 2) * 8 + length + 4 * 8;
 
     printf("Sending thread-thread, with hardwareclock-sync and ethernet frames:\n"
            "- Frequency in Hz: %zu\n"
-           "- Paket Length: %d\n",
-           FREQUENCY, STREAM_LENGTH);
+           "- Paket Length: %zu\n",
+           frequency, length);
 
     // randomise message
     srand(time(0));
-    for(int i = 0; i < STREAM_LENGTH; i++)
+    for(int i = 0; i < length; i++)
     {
         frame.payload[i] = rand() % 2;
     }
 
     // write message to file
     FILE* f_act = fopen("act.txt", "w");
-    for(int i = 0; i < STREAM_LENGTH; i++)
+    for(int i = 0; i < length; i++)
     {
         fprintf(f_act, "%lu\n", frame.payload[i]);
     }
@@ -104,7 +104,7 @@ int main()
     // start signal handler
     signal(SIGALRM, signal_handler);
     // alarm every communication cycle
-    ualarm(INTERVAL, INTERVAL);
+    ualarm(interval, interval);
 
     loop:
 

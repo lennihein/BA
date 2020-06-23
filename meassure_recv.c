@@ -1,38 +1,57 @@
 #include "lib.h"
 
-#define FLUSH_FLUSH 1
-#define FLUSH_RELOAD 0
-
-#include "CONFIG.H"
-#define STREAM_LENGTH TEST_LENGTH
-
-/***************************/
-#define INTERVAL 1000000000/FREQUENCY
-#define FLUSH_FLUSH_COMP >
-#define FLUSH_RELOAD_COMP <=
-#define FLUSH_RELOAD_MEASSURE meassure_fr
-#define FLUSH_FLUSH_MEASSURE meassure_ff
-#if METHOD == FLUSH_FLUSH
-#define SATISFIES FLUSH_FLUSH_COMP
-#define MEASSURE FLUSH_FLUSH_MEASSURE
-#endif
-#if METHOD == FLUSH_RELOAD
-#define SATISFIES FLUSH_RELOAD_COMP
-#define MEASSURE FLUSH_RELOAD_MEASSURE
-#endif
-#define unlikely(expr) __builtin_expect(!!(expr), 0)
-/***************************/
-
-size_t payload[STREAM_LENGTH];
+size_t* payload;
+size_t method, length;
+size_t (*meassure)(void (* addr)(void));
+size_t frequency, interval;
 
 void* receiver(void* _);
 
-int main()
+int main(int argc, char* argv[])
 {
+    if(argc == 4)
+    {
+        if(strcmp(argv[1], "-ff")==0)
+        {
+            method = FLUSH_FLUSH;
+            meassure = meassure_ff;
+        }
+        else
+        {
+            if(strcmp(argv[1], "-fr")==0)
+            {
+                method = FLUSH_RELOAD;
+                meassure = meassure_fr;
+            }
+            else
+            {
+                goto invalid;
+            }
+        }
+
+        frequency = strtoll(argv[2], NULL, 10);
+        if(frequency==0) goto invalid;
+        // interval in nsecs
+        interval = 1000000000/frequency;
+
+        length = strtoll(argv[3], NULL, 10);
+        if(length==0) goto invalid;
+    }
+    else
+    {
+        invalid:
+        fprintf(stderr, "usage: ./meassure_recv [-ff/-fr] [FREQUENCY] [TESTPOINTS]\n");
+        exit(1);
+    }
+
+    payload = malloc(sizeof(size_t)*length);
+    if(!payload){fprintf(stderr, "could not allocate memory\n"); exit(2);}
+
+
     printf("Receiving alternating \'1\' and \'0\'\n- Frequency in Hz: %zu\n"
-           "- Testdata Length: %d\n"
+           "- Testdata Length: %lu\n"
            "- Method: %s\n",
-           FREQUENCY, STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload");
+           frequency, length, method == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload");
 
     pthread_t r;
     pthread_create(&r, NULL, receiver, NULL);
@@ -40,7 +59,7 @@ int main()
 
     {
         FILE* group_A = fopen("groupA.txt", "w");
-        for(int i = 0; i < STREAM_LENGTH; i+=2)
+        for(int i = 0; i < length; i+=2)
         {
             fprintf(group_A, "%lu\n", payload[i]);
         }
@@ -48,7 +67,7 @@ int main()
         fclose(group_A);
 
         FILE* group_B = fopen("groupB.txt", "w");
-        for(int i = 1; i < STREAM_LENGTH; i+=2)
+        for(int i = 1; i < length; i+=2)
         {
             fprintf(group_B, "%lu\n", payload[i]);
         }
@@ -66,11 +85,11 @@ void* receiver(void* _)
     while(1)
     {
         sched_yield();
-        size_t d = MEASSURE(function + 64);
+        size_t d = meassure(function + 64);
 
         payload[i++] = d;
 
-        if(i == STREAM_LENGTH)
+        if(i == length)
             return NULL;
 
         WAIT_FOR_CLOCK

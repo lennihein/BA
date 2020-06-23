@@ -16,8 +16,10 @@ size_t meassure_fr(void (* addr)(void));
 void flush(void* p);
 void maccess(void* p);
 
+#define unlikely(expr) __builtin_expect(!!(expr), 0)
+
 #define WAIT_FOR_CLOCK                                                  \
-nanosecs = INTERVAL;                                                    \
+nanosecs = interval;                                                    \
 nanosecs += t0.tv_nsec;                                                 \
 if(unlikely(nanosecs > 999999999))                                      \
 {nanosecs -= 1000000000;                                                \
