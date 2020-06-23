@@ -1,7 +1,7 @@
 #include "lib.h"
 #include "crc.h"
 
-#define eval(x) method?(x>threshhold?1:0):(x<=threshhold?1:0)
+#define eval(x) (method?(x>threshhold?1:0):(x<=threshhold?1:0))
 
 struct field
 {
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
     // check length:
     if(length!=length_)
     {
-        fprintf(stderr, "length not matching: %lu(arg) - %hu(transmitted)\n", length, length_);
+        fprintf(stderr, "length not matching: %lu(arg) - %d(transmitted)\n", length, length_);
         for(int i=0; i<16; i++)
         {
             printf("%d\n", eval(frame.length[i]));
