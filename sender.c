@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     else
     {
         invalid:
-        fprintf(stderr, "usage: ./meassure_send [FREQUENCY] [PAKETLENGTH]\n");
+        fprintf(stderr, "usage: ./sender [FREQUENCY] [PACKETLENGTH]\n");
         exit(1);
     }
     state.message_length = length;
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 
     printf("Sending thread-thread, with hardwareclock-sync and ethernet frames:\n"
            "- Frequency in Hz: %zu\n"
-           "- Paket Length: %zu\n",
+           "- Packet Length: %zu\n",
            frequency, length);
 
     // randomise message

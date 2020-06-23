@@ -60,12 +60,12 @@ int main(int argc, char* argv[])
     else
     {
         invalid:
-        fprintf(stderr, "usage: ./meassure_recv [-ff/-fr] [THRESHHOLD] [FREQUENCY] [TESTPOINTS]\n");
+        fprintf(stderr, "usage: ./receiver [-ff/-fr] [THRESHHOLD] [FREQUENCY] [PACKETLENGTH]\n");
         exit(1);
     }
     printf("Receiving process->process, with hardwareclock-sync and ethernet frames:\n"
            "- Frequency in Hz: %zu\n"
-           "- Paket Length: %zu\n"
+           "- Packet Length: %zu\n"
            "- Method: %s\n"
            "- Threshhold: %zu\n",
            frequency, length, method == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", threshhold);
