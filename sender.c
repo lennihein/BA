@@ -52,11 +52,10 @@ int main()
     state.output = 0;
     state.frame_length = (7 + 1 + 6 + 6 + 2) * 8 + STREAM_LENGTH + 4 * 8;
 
-    printf("Sending thread-thread, with hardwareclock-sync and ethernet frames:\n\n"
-           "- Length of Message: %zu\n"
-           "- Method: %s\n"
-           "Interval in usec: %zu\n",
-           state.message_length, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", state.interval);
+    printf("Sending thread-thread, with hardwareclock-sync and ethernet frames:\n"
+           "- Frequency in Hz: %zu\n"
+           "- Paket Length: %d\n",
+           FREQUENCY, STREAM_LENGTH);
 
     // randomise message
     srand(time(0));
@@ -95,7 +94,7 @@ int main()
     }
 
     // set checksum
-    crc checksum = crcFast(frame.mac_addr, sizeof(size_t) * ((6+6+2)*8 + state.message_length));
+    crc checksum = crcFast((const unsigned char*)frame.mac_addr, sizeof(size_t) * ((6+6+2)*8 + state.message_length));
     // sending the checksum little-endian
     for(int i = 0; i < 32; i++)
     {

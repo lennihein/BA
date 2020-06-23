@@ -30,8 +30,8 @@ void signal_handler(int _);
 
 int main()
 {
-    printf("Sending thread-thread, with hardwareclock-sync:\nInterval in usec: %zu\n",
-           INTERVAL);
+    printf("Sending alternating \'1\' and \'0\'\n- Frequency in Hz: %zu\n",
+           FREQUENCY);
 
 
     signal(SIGALRM, signal_handler);

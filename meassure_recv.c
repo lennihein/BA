@@ -29,11 +29,10 @@ void* receiver(void* _);
 
 int main()
 {
-    printf("Receiving process->process, with hardwareclock-sync and ethernet frames:\n\n"
-           "- STREAM_LENGTH: %d\n"
-           "- METHOD: %s\n"
-           "- Interval in usec: %d\n",
-           STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", INTERVAL/1000);
+    printf("Receiving alternating \'1\' and \'0\'\n- Frequency in Hz: %zu\n"
+           "- Testdata Length: %d\n"
+           "- Method: %s\n",
+           FREQUENCY, STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload");
 
     pthread_t r;
     pthread_create(&r, NULL, receiver, NULL);

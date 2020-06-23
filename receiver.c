@@ -46,11 +46,12 @@ int main(int argc, char* argv[])
         fprintf(stderr, "usage: ./receiver [TRESHHOLD]\n");
         exit(1);
     }
-    printf("Receiving process->process, with hardwareclock-sync and ethernet frames:\n\n"
-           "- STREAM_LENGTH: %d\n"
-           "- METHOD: %s\n"
-           "- THRESHHOLD: %zu\n",
-           STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", threshhold);
+    printf("Receiving process->process, with hardwareclock-sync and ethernet frames:\n"
+           "- Frequency in Hz: %zu\n"
+           "- Paket Length: %d\n"
+           "- Method: %s\n"
+           "- Threshhold: %zu\n",
+           FREQUENCY, STREAM_LENGTH, METHOD == FLUSH_FLUSH ? "Flush+Flush" : "Flush+Reload", threshhold);
 
     pthread_t r;
     pthread_create(&r, NULL, receiver, NULL);
