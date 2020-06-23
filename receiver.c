@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 
     // prepare predictions
     {
-        FILE* f_pred = fopen("pred.txt", "w");
+        FILE* f_pred = fopen("pred.txt", "a");
         for(int i = 0; i < length; i++)
         {
             fprintf(f_pred, "%d\n", eval(frame.payload[i]));

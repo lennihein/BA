@@ -64,6 +64,11 @@ int main(int argc, char* argv[])
         frame.payload[i] = rand() % 2;
     }
 
+    // clear predictions for earlier packets
+    FILE* f_pred = fopen("pred.txt", "w");
+    fprintf(f_pred, "");
+    fclose(f_pred);
+
     // write message to file
     FILE* f_act = fopen("act.txt", "w");
     for(int i = 0; i < length; i++)
