@@ -21,7 +21,6 @@ pip3 install numpy matplotlib sklearn
 
 ## Instructions: compilation
 ```bash
-```bash
 cmake .
 make
 ```
