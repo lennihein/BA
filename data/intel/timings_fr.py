@@ -5,22 +5,22 @@ from sklearn import metrics
 
 from matplotlib.ticker import NullFormatter  # useful for `logit` scale
 
-mh1 = 136
-sh1 = 12.3
-mm1 = 362
-sm1 = 34.4
+mh1 = 42.62
+sh1 = 1.4
+mm1 = 266
+sm1 = 2.2
 
-mh2 = 124
-sh2 = 16.5
-mm2 = 378
-sm2 = 145
+mh2 = 43.37
+sh2 = 1.87
+mm2 = 266
+sm2 = 2.6
 
-mh3 = 180
-sh3 = 106.4
-mm3 = 356
-sm3 = 159.5
+mh3 = 43.15
+sh3 = 1.35
+mm3 = 266
+sm3 = 2.53
 
-plt.xlim(100, 400)
+plt.xlim(0, 300)
 xmin, xmax = plt.xlim()
 x = np.linspace(xmin, xmax, 100)
 
