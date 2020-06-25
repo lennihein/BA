@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import norm
 from sklearn import metrics
 
+FF=False
 
 # https://stackoverflow.com/questions/22579434/python-finding-the-intersection-point-of-two-gaussian-curves
 def solve(m1, m2, std1, std2):
@@ -48,7 +49,7 @@ mu_miss, std_miss = np.mean(misses_cleaned), np.std(misses_cleaned)
 # fit for Hits
 mu_hit, std_hit = np.mean(hits_cleaned), np.std(hits_cleaned)
 
-if mu_miss > mu_hit:
+if (FF is True and mu_miss > mu_hit) or (FF is False and mu_hit > mu_miss):
     (misses, hits) = (hits, misses)
     (misses_cleaned, hits_cleaned) = (hits_cleaned, misses_cleaned)
 
@@ -57,12 +58,9 @@ if mu_miss > mu_hit:
 
     # fit for Hits
     mu_hit, std_hit = np.mean(hits_cleaned), np.std(hits_cleaned)
-    if mu_miss > mu_hit:
-        print("WTF")
-        exit(1)
 
-plt.hist(hits, density=True, align="mid", alpha=0.6, color='g', label="Hits")
-plt.hist(misses, density=True, align="mid", histtype="barstacked", alpha=0.6, color='r', label="Misses")
+plt.hist(hits, density=True, bins = 100, align="mid", alpha=0.6, color='g', label="Hits")
+plt.hist(misses, density=True, bins = 5000, align="mid", histtype="barstacked", alpha=0.6, color='r', label="Misses")
 
 plt.xlim(min(min(hits_cleaned), min(misses_cleaned)) - 5, max(max(hits_cleaned), max(misses_cleaned)) + 5)
 xmin, xmax = plt.xlim()
@@ -94,14 +92,10 @@ max_acc = 0
 best_threshhold = 0
 for threshhold in result:
     inputs = hits + misses
-    if method == "ff":
+    if FF is True:
         pred = ["Hit" if i > threshhold else "Miss" for i in inputs]
-    elif method == "fr":
-        pred = ["Hit" if i <= threshhold else "Miss" for i in inputs]
     else:
-        print("WTF3")
-        pred = None
-        exit(1)
+        pred = ["Hit" if i <= threshhold else "Miss" for i in inputs]
 
     act = ["Hit"] * NUMBEROFPOINTS + ["Miss"] * NUMBEROFPOINTS
     accuracy = metrics.accuracy_score(act, pred)
@@ -113,14 +107,10 @@ for threshhold in result:
 threshhold = best_threshhold
 print("\n\nTHRESHHOLD: ", threshhold)
 inputs = hits + misses
-if method == "ff":
+if FF is True:
     pred = ["Hit" if i > threshhold else "Miss" for i in inputs]
-elif method == "fr":
-    pred = ["Hit" if i <= threshhold else "Miss" for i in inputs]
 else:
-    print("WTF3")
-    pred = None
-    exit(1)
+    pred = ["Hit" if i <= threshhold else "Miss" for i in inputs]
 
 act = ["Hit"] * NUMBEROFPOINTS + ["Miss"] * NUMBEROFPOINTS
 print("\n", metrics.confusion_matrix(act, pred, labels=["Hit", "Miss"]), "\n")
