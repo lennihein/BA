@@ -25,3 +25,5 @@ THRESHHOLD:  545.6478755426971
 weighted avg       0.98      0.98      0.98     10000
 
 Accuracy:  0.9812
+
+![img](Figure_1.png)
