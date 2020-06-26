@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 freqs = [1, 10, 100]
-ff_acc = [1,0.9, 0.62 ]
+ff_acc = [1,0.96, 0.62 ]
 fr_acc = [1, 0.91, 0.66]
 
 fig = plt.figure()
