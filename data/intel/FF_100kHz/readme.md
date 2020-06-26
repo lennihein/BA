@@ -44,3 +44,11 @@ weighted avg       0.62      0.62      0.62     10000
 Wasserstein-Distance: 0.00540000
 
 ![image](Figure_1.png)
+
+Accuracy: 0.624  
+Wassersteind: 0.00539999999999996  
+Normal Distributed projected Wassersteind: 0.004814
+
+![e](errors.png)
+
+![e](error_groupings.png)
