@@ -1,0 +1,604 @@
+
+<!-- saved from url=(0064)http://www-math.mit.edu/~djk/18.310/18.310F04/shannon_bound.html -->
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 9">
+<meta name="Originator" content="Microsoft Word 9">
+<link rel="File-List" href="http://www-math.mit.edu/~djk/18.310/18.310F04/shannon_bound_files/filelist.xml">
+<link rel="Edit-Time-Data" href="http://www-math.mit.edu/~djk/18.310/18.310F04/shannon_bound_files/editdata.mso">
+<link rel="OLE-Object-Data" href="http://www-math.mit.edu/~djk/18.310/18.310F04/shannon_bound_files/oledata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>8. Coding for Error Correction: the Shannon Bound</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Math Dept</o:Author>
+  <o:LastAuthor>dan kleitman</o:LastAuthor>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>17</o:TotalTime>
+  <o:Created>2002-09-18T20:14:00Z</o:Created>
+  <o:LastSaved>2002-09-18T20:14:00Z</o:LastSaved>
+  <o:Pages>3</o:Pages>
+  <o:Words>1556</o:Words>
+  <o:Characters>8874</o:Characters>
+  <o:Company>MIT</o:Company>
+  <o:Lines>73</o:Lines>
+  <o:Paragraphs>17</o:Paragraphs>
+  <o:CharactersWithSpaces>10897</o:CharactersWithSpaces>
+  <o:Version>9.2720</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="2050"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor="white" lang="EN-US" style="tab-interval:.5in">
+
+<div class="Section1">
+
+<p class="MsoNormal" align="center" style="text-align:center"><b style="mso-bidi-font-weight:
+normal"><span style="font-size:16.0pt">8. Coding for Error Correction: the
+Shannon Bound<o:p></o:p></span></b></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><b style="mso-bidi-font-weight:
+normal">1. Introduction and Statement of the Theorem<o:p></o:p></b></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>We now
+consider the problem of transmitting or storing information accurately, when we
+have noise in our transmission device or dead spots in our storage medium,
+which destroy some of the information.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Suppose we
+have a message which requires M bits to send, We mean by this that the actual
+message will be one among 2<sup>M</sup> possible messages that we might send.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>We suppose
+further, that each bit will be in error a certain proportion p of the time. You
+might imagine p to be 10<sup>-4 </sup><span style="mso-spacerun:
+yes">&nbsp;</span>or something like that. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>We assume
+that errors appear independently in our bits with probability p. We have no
+information, however, as to which bits will be in error when we send our message.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>In
+practice, errors often are not independent, but rather have a tendency to occur
+in bursts. This is useful information for us, because we can structure our
+procedures for handling errors so that they are less vulnerable to several
+errors in a small segment of the message than they are in general. For the
+moment we will ignore this possibility and assume independence of our errors,
+in the sense of probability.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>The
+assumptions we have made so far allow us to use both the (weak) Law of Large.Numbers
+derived in the last chapter, but the binomial distribution of errors also
+discussed.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>In this
+context our plan is to make our message longer than M bits, so that we have
+some redundancy in it. We want to use that redundancy to recognize the errors
+in our message, after it is sent and received, or after it is retrieved from
+storage,<span style="mso-spacerun: yes">&nbsp; </span>and recover our original
+message.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>We will
+address two questions: </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><b style="mso-bidi-font-weight:normal">How much redundancy need we add here so
+that we can recover the original message</b>? In other words, how long must our
+message actually be?</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><b style="mso-bidi-font-weight:normal">How can we actually construct useful codes
+that are reasonably efficient in error correction</b>?</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>The answer
+to the first question is given by <b style="mso-bidi-font-weight:normal">Shannon's
+Second Theorem</b>, which is as follows.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal">Theorem 8.1: To
+transmit M message bits given a probability p of each bit being in error, for
+large M requires a proportion H(p) (which is –plog<sub>2</sub>p – (1-p)log<sub>2</sub>(1-p))
+of additional redundant bits, (called check bits). Thus, if we let the total
+number of bits needed be N, we have<o:p></o:p></b></p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><b style="mso-bidi-font-weight:
+normal">N = M + NH(p).<o:p></o:p></b></p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><b style="mso-bidi-font-weight:
+normal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></b></p>
+
+  <p class="MsoNormal"><b style="mso-bidi-font-weight:normal">Not only must the 
+    code be at least this long, but most (almost all) codes with bit length cM 
+    longer than this for any c&gt;0 allow us to recover the message under the 
+    given assumptions, a proportion approaching 1 of the time.<o:p></o:p></b></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></b></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>The
+remainder of this chapter will consist of proof of this theorem. We will then
+turn to the second question.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>The rest of
+this section consists of philosophical remarks.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>We will
+find that we can construct interesting codes that are quite efficient, nobody
+has been able to discover classes of useful codes for large M and large p
+ranges, which come close to this bound. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>The theorem
+implies that a code in which the code words were chosen at random for each potential
+message, from among code words of the length noted above, would very probably
+allow us to recover our message most of the time.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>However, we
+do not know how to find such a code in general. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>You might
+ask, why not generate a code word for each potential message randomly and use
+that code when you need one? </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>There are
+three objections to such a procedure: </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>First, if M
+is large, the number of potential messages, 2<sup>M</sup>, is far too vast to
+make an independent choice of code word for each potential message at all
+possible. OK, we can break our message up into blocks of length k and define a
+code word for each potential block. This is becomes hopeless when the block
+size gets near 50. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Second,
+encoding and decoding in such a code requires table look up, which requires
+keeping the code words for every potential message available. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Finally,
+decoding when there are errors requires additional work, because the received
+message with its errors will not be in the table of code words. By the law of
+large numbers, is will differ from the sent code word by roughly pN bits. There
+are techniques for locating the message, (these are extensively used in biology
+to find genes among sequences of DNA) but they are cumbersome.</p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Thus, we
+will later seek codes which have lots of structure and that make decoding easy
+even in the presence of errors. For large k and given p it becomes difficult to
+find codes that make this possible that meet the Shannon bound..</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Finding
+efficient error correcting codes is a problem that has, then, the remarkable
+property that human beings have difficulty constructing codes of a given length
+that are error correcting with proportion of check bits H(p) +c for small c,
+while almost all randomly chosen codes of this length have the error correcting
+property.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>In other
+words, for this problem (and quite a few others in computer science) random
+constructions are better than anything we know how to devise ourselves.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>This tells
+us a lesson that perhaps explains a bit of history. Throughout the Nineteenth
+and much of Twentieth Century it was an article of faith among many
+intellectuals that a planned economy could and should be far more efficient
+than the random and chaotic economy that is built up from the bottom by the
+independent action of many individuals. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>However,
+when put into practice in the Twentieth Century, planned economies turned out
+to be not only quite irksome and occasionally deadly to the intended
+beneficiaries of the planning, but economic disasters as well.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Perhaps
+then the construction of an economy is a problem like those of computer science
+such as finding error correcting codes, where random construction is almost
+always better than anything systematic we can come up with.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><b style="mso-bidi-font-weight:
+normal">8.2 Proof of the Shannon Bound<o:p></o:p></b></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>We want to
+prove that we need a proportion of redundant bits beyond our original M bits of
+at least something like H(p) in order to be able to correctly decode our
+message. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>When we
+receive a message we will have no idea which bits have been garbled. We will
+assume, however, that no bits are dropped or added; the only possible mistakes
+are<span style="mso-spacerun: yes">&nbsp; </span>to switch 0 and 1 here and there
+throughout the message.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>We seek a
+unique decoding; <b style="mso-bidi-font-weight:normal">under these
+circumstances the best candidate to be the true sent message, is the message
+whose code word differs from the received word in the fewest places,<o:p></o:p></b></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></b></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>The number
+of places in which two words of the same length differ is called the <b style="mso-bidi-font-weight:normal">Hamming distance</b> between them. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-spacerun: yes">&nbsp;</span><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>The Hamming distance between the true
+code word and the received word is the number of errors our message was
+afflicted with. Now we know from the Law of Large Numbers of Chapter<span style="mso-spacerun: yes">&nbsp; </span>7 that this will be on the order of Np.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>If our
+message is long enough, this number will be quite large, Suppose then that Np +
+q errors are made, for |q| much smaller than Np. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>We now ask,
+how many different ways are there to make Np+q errors, in a message of length
+N? </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>The answer
+is the binomial coefficient, C(N, Np+q). We have seen in the last chapter that
+we can write this binomial coefficient according to:</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal" align="center" style="text-align:center">C(N,Np+q) = 2 <sup>((N*H(p+(q/N)))
+(1+o(1)))</sup><br style="mso-special-character:line-break">
+<!--[if !supportLineBreakNewLine]--><br style="mso-special-character:line-break">
+<!--[endif]--></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Each error
+pattern for this number of errors is as probable asany other. We also have no
+advanced knowledge of which message was sent, and there were 2<sup>M </sup><span style="mso-spacerun: yes">&nbsp;</span>possible of those. </p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Thus there
+are at least 2<sup>M+</sup> <sup>((N*H(p+(q/N))) (1+o(1)))</sup> possible
+received words.all of which have the same probability of being received.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>By our
+pigeonhole principle, we need N to be on the order of log<sub>2</sub> of this
+number of bits in order to distinguish among these. And notice that if we fail
+to distinguish among s of these possible received messages at most one of these
+can come from any code word, and we will not be able to distinguish among s
+different sent messages.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>For us to
+have a reasonable chance of decoding then, most of the time <span style="mso-spacerun: yes">&nbsp;</span>s should be quite small (preferably 1) , and
+that means that N must be at least on the order of M+N*H(p).</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Which is
+what we set out to prove.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>To
+summarize the argument, the errors that we know will happen will spread our 2<sup>M</sup>
+messages each to on the order of <span style="mso-spacerun: yes">&nbsp;</span>2<sup>NH(p)
+</sup>possible error filled messages, and this implies our claim.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><b style="mso-bidi-font-weight:normal">8.3 Proof that Random Codes come close to
+the Shannon Bound.<o:p></o:p></b></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>To prove
+this, we look at the sample space consisting of all possible codes,
+(assignments of code words to potential messages) in which all code words have
+length N with each code word for each message having the same probability of
+being a code word, and code words for different messages chosen independently
+and all possible distributions of errors with probability p for each error
+place independently.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Suppose we
+receive a word R. We know from our weak law of large numbers, that the true
+decoding of this , the message Z, has a code word C(Z) which has Hamming
+distance on the order of<span style="mso-spacerun: yes">&nbsp; </span>Np from R.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Our plan
+will be to decode R to the nearest code word D to it that we find.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>If that
+word is C(Z) we will be right, and otherwise we will be wrong.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><b style="mso-bidi-font-weight:normal">Then when will we be wrong? <o:p></o:p></b></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></b></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></b>We will be wrong if there is any
+other code word D that is closer to R than D is. So we will be right if no
+other code word has Hamming distance on the order of N(p+<span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>) or
+less from<span style="mso-spacerun: yes">&nbsp; </span>R.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Let the
+number of words of length N having Hamming distance at most N(p+<span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>)
+from R be V(N(p+<span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>))</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Since each
+code word for other code words is chosen at random among the 2<sup>N</sup>
+possible code words, it has probability of<span style="mso-spacerun: yes">&nbsp;
+</span>2<sup>-N </sup><span style="mso-spacerun: yes">&nbsp;</span>of being any
+single word, and probability V(N(p+<span style="font-family:Symbol;mso-ascii-font-family:
+&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;
+mso-symbol-font-family:Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:
+Symbol">e</span></span>))/2<sup>N</sup> of being within Hamming distance at
+most N(p+<span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>)
+from R.</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><b style="mso-bidi-font-weight:normal">Thus the probability of that code word
+being too far from R to be confused with the actual sent code word is at least <o:p></o:p></b></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></b></p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><b style="mso-bidi-font-weight:
+normal">(1 - V(N(p+</b><b style="mso-bidi-font-weight:normal"><span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>))/2<sup>N</sup>).<o:p></o:p></b></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><b style="mso-bidi-font-weight:normal">The probability that this happens
+independently for each of the 2<sup>M</sup> -1 other code<span style="mso-spacerun: yes">&nbsp; </span>words is the product of the probabilities of
+each of these events happening, or<o:p></o:p></b></p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><b style="mso-bidi-font-weight:
+normal"><span style="mso-spacerun: yes">&nbsp;</span>(1 - V(N(p+</b><b style="mso-bidi-font-weight:normal"><span style="font-family:Symbol;mso-ascii-font-family:
+&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;
+mso-symbol-font-family:Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:
+Symbol">e</span></span>))/2<sup>N</sup>) raised to the power 2<sup>M-1</sup>.<o:p></o:p></b></p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><b style="mso-bidi-font-weight:
+normal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></b></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>And if this happens, we will decode
+successfully.<o:p></o:p></b></p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><b style="mso-bidi-font-weight:
+normal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></b></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Now V(N(p+<span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>))/2<sup>N</sup>
+is quite small. One minus it is therefore very close to e raised to the power
+of -V(N(p+<span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>))/2<sup>N</sup>.<b style="mso-bidi-font-weight:normal"><o:p></o:p></b></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></b></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>We deduce
+then, that we will decode successfully with probability at least </p>
+
+<p class="MsoNormal">exp(-V(N(p+<span style="font-family:Symbol;mso-ascii-font-family:
+&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;
+mso-symbol-font-family:Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:
+Symbol">e</span></span>))/2<sup>N</sup>) raised to the power 2<sup>M-1</sup>
+which is</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>exp(-V(N(p+<span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>))/2<sup>N-M+1</sup>).</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal">Exercise: Prove log<sub>2</sub>(V(N(p+</b><b style="mso-bidi-font-weight:normal"><span style="font-family:Symbol;mso-ascii-font-family:
+&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;
+mso-symbol-font-family:Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:
+Symbol">e</span></span>))) is of the order of NH(p+</b><b style="mso-bidi-font-weight:
+normal"><span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>).<o:p></o:p></b></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>By the
+result you have just proven, your chance of success in decoding is at
+least<span style="mso-spacerun: yes">&nbsp; </span></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal">Exp(-2<sup>-(N-M-NH(p+</sup><sup><span style="font-family:
+Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol"><span style="mso-char-type:
+symbol;mso-symbol-font-family:Symbol">e</span></span>))</sup>).</p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal">and <b style="mso-bidi-font-weight:normal">when<span style="mso-spacerun: yes">&nbsp; </span>N&gt;&gt;M+NH(p+</b><b style="mso-bidi-font-weight:
+normal"><span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>)
+holds</b>, which means that the number of redundant bits is more than NH(p+<span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>) for
+any positive <span style="font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol"><span style="mso-char-type:symbol;mso-symbol-font-family:Symbol">e</span></span>,
+<b style="mso-bidi-font-weight:normal">the exponent here is close to 0 and the
+probability of successful decoding is close to 1. <o:p></o:p></b></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></b></p>
+
+<p class="MsoNormal"><b style="mso-bidi-font-weight:normal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>This is what we set out to prove.<o:p></o:p></b></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><!--[if !supportEmptyParas]-->&nbsp;<!--[endif]--><o:p></o:p></p>
+
+<p class="MsoNormal"><span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>If no other
+code word is in the Hamming sphere of radius (p+<span style="font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol"><span style="mso-char-type:
+symbol;mso-symbol-font-family:Symbol">e</span></span>)N of R, we will decode
+our message correctly.</p>
+
+<p class="MsoNormal" align="center" style="text-align:center"><!--[if gte vml 1]><v:shapetype
+ id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+ path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:144.75pt;
+ height:142.5pt' o:ole="">
+ <v:imagedata src="./shannon_bound_files/image001.png" o:title=""/>
+</v:shape><![endif]--><!--[if !vml]--><img width="193" height="190" src="./8. Coding for Error Correction_ the Shannon Bound_files/image002.jpg" v:shapes="_x0000_i1025"><!--[endif]--><!--[if gte mso 9]><xml>
+ <o:OLEObject Type="Embed" ProgID="PBrush" ShapeID="_x0000_i1025"
+  DrawAspect="Content" ObjectID="_1093870855">
+ </o:OLEObject>
+</xml><![endif]--></p>
+
+</div>
+
+
+
+
+</body></html>
