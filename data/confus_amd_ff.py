@@ -18,8 +18,6 @@ tp = [x[1][1] for x in ff_intel]
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 
-print(tp)
-
 ax.plot(freqs, fp, 'r--', linewidth=2, label="False Positives")
 ax.plot(freqs, tp, 'r-', linewidth=2, label="True Positives")
 ax.plot(freqs, fn, 'b--', linewidth=2, label="False Negatives")
