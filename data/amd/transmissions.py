@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 freqs = [1, 10, 100]
 ff_acc = [0.72, 0.59, 0.59]
-fr_acc = [0.94, 0.97, 0.76]
+fr_acc = [0.94, 0.93, 0.76]
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)

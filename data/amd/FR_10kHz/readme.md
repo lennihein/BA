@@ -27,20 +27,20 @@ weighted avg       1.00      1.00      1.00     10000
 Accuracy:  0.9979
 Results for the Transmission:
 
- [[2455    0]
- [ 156 2389]] 
+ [[4341  259]
+ [ 473 4927]] 
 
               precision    recall  f1-score   support
 
           0
-       0.94      1.00      0.97      2455
+       0.90      0.94      0.92      4600
           1
-       1.00      0.94      0.97      2545
+       0.95      0.91      0.93      5400
 
-    accuracy                           0.97      5000
-   macro avg       0.97      0.97      0.97      5000
-weighted avg       0.97      0.97      0.97      5000
+    accuracy                           0.93     10000
+   macro avg       0.93      0.93      0.93     10000
+weighted avg       0.93      0.93      0.93     10000
 
-Wasserstein-Distance: 0.03120000
+Wasserstein-Distance: 0.02140000
 
 ![image](Figure_1.png)

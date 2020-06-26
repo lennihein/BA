@@ -5,7 +5,7 @@ intel_ff_acc = [1,0.9, 0.62 ]
 intel_fr_acc = [1, 0.91, 0.66]
 
 amd_ff_acc = [0.72, 0.59,0.59]
-amd_fr_acc = [0.94, 0.97, 0.76]
+amd_fr_acc = [0.94, 0.93, 0.76]
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
