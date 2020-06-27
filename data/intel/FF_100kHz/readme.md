@@ -4,27 +4,27 @@ Fit results Misses: mu = 141.87,  std = 15.44
 5000
 
 Threshhold:  141.667247945282 
-Accuracy:  0.4589
+Accuracy:  0.5411
 
 Threshhold:  -83.44862224644491 
 Accuracy:  0.5
 
 
-THRESHHOLD:  -83.44862224644491
+THRESHHOLD:  141.667247945282
 
- [[5000    0]
- [5000    0]] 
+ [[2729 2271]
+ [2318 2682]] 
 
               precision    recall  f1-score   support
 
-         Hit       0.50      1.00      0.67      5000
-        Miss       0.00      0.00      0.00      5000
+         Hit       0.54      0.55      0.54      5000
+        Miss       0.54      0.54      0.54      5000
 
-    accuracy                           0.50     10000
-   macro avg       0.25      0.50      0.33     10000
-weighted avg       0.25      0.50      0.33     10000
+    accuracy                           0.54     10000
+   macro avg       0.54      0.54      0.54     10000
+weighted avg       0.54      0.54      0.54     10000
 
-Accuracy:  0.5
+Accuracy:  0.5411
 Results for the Transmission:
 
  [[3317 1853]
@@ -44,11 +44,3 @@ weighted avg       0.62      0.62      0.62     10000
 Wasserstein-Distance: 0.00540000
 
 ![image](Figure_1.png)
-
-Accuracy: 0.624  
-Wassersteind: 0.00539999999999996  
-Normal Distributed projected Wassersteind: 0.004814
-
-![e](errors.png)
-
-![e](error_groupings.png)

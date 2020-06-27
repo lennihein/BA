@@ -54,7 +54,7 @@ print("Wassersteind: " +str(wasserstein_distance(pred, act)))
 import random
 
 _tmp1 = []
-for _tmp2 in range(1000):
+for _tmp2 in range(10000):
     _x = [random.random() > 0.5 for _ in range(10000)]
     _y = [i if random.random() < acc else i^1 for i in _x]
     # _diff = [_x[i]^_y[i] for i in range(len(_x))]

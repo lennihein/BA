@@ -22,25 +22,25 @@ sm3 = 159.5
 
 plt.xlim(0, 600)
 xmin, xmax = plt.xlim()
-x = np.linspace(xmin, xmax, 100)
+x = np.linspace(xmin, xmax, 500)
 
 h1 = norm.pdf(x, mh1, sh1)
-plt.plot(x, h1, 'b-', linewidth=2, label="1kHz Hits")
+plt.plot(x, h1, 'b-', linewidth=2, label="'1' 1kHz")
 
 m1 = norm.pdf(x, mm1, sm1)
-plt.plot(x, m1, 'b--', linewidth=2, label="1kHz Misses")
+plt.plot(x, m1, 'b--', linewidth=2, label="'0' 1kHz")
 
 h2 = norm.pdf(x, mh2, sh2)
-plt.plot(x, h2, 'r-', linewidth=2, label="10kHz Hits")
+plt.plot(x, h2, 'r-', linewidth=2, label="'1' 10kHz")
 
 m2 = norm.pdf(x, mm2, sm2)
-plt.plot(x, m2, 'r--', linewidth=2, label="10kHz Misses")
+plt.plot(x, m2, 'r--', linewidth=2, label="'0' 10kHz")
 
 h3 = norm.pdf(x, mh3, sh3)
-plt.plot(x, h3, 'g-', linewidth=2, label="100kHz Hits")
+plt.plot(x, h3, 'g-', linewidth=2, label="'1' 100kHz")
 
 m3 = norm.pdf(x, mm3, sm3)
-plt.plot(x, m3, 'g--', linewidth=2, label="100kHz Misses")
+plt.plot(x, m3, 'g--', linewidth=2, label="'0' 100kHz")
 
 plt.legend()
 plt.show()
