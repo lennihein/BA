@@ -15,3 +15,9 @@ target_link_libraries(sender pthread sharedlib)
 
 add_executable(receiver receiver.c lib.c lib.h crc.c)
 target_link_libraries(receiver pthread sharedlib)
+
+add_executable(send_ascii send_ascii.c lib.c lib.h crc.c)
+target_link_libraries(sender pthread sharedlib)
+
+add_executable(receive_ascii receive_ascii.c lib.c lib.h crc.c)
+target_link_libraries(receiver pthread sharedlib)
