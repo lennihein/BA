@@ -68,25 +68,36 @@ int main(int argc, char* argv[])
 
     pthread_t r;
     _dispatch:
+    memset(&frame, '0', sizeof(struct field));
     pthread_create(&r, NULL, receiver, NULL);
     pthread_join(r, NULL);
 
-    // retieve checksum:
-    for(int i=0; i<32; i++)
+    if(length == 0)
     {
-        checksum_ |= eval(frame.payload[i + length])<< (31 - i);
+	    goto _dispatch;
     }
 
-    // check checksum:
-    if(checksum_!=crcFast((const unsigned char*) frame.mac_addr, sizeof(size_t) * ((6 + 6 + 2) * 8 + length)))
-    {
-        fprintf(stderr, "checksum not matching\n");
-        goto _dispatch;
-    }
+    // // retieve checksum:
+    // for(int i=0; i<32; i++)
+    // {
+    //     checksum_ |= eval(frame.payload[i + length])<< (31 - i);
+    // }
 
-    for(int i = 0; i < length; i++)
+    // // check checksum:
+    // if(checksum_!=crcFast((const unsigned char*) frame.mac_addr, sizeof(size_t) * ((6 + 6 + 2) * 8 + length)))
+    // {
+    //     fprintf(stderr, "checksum not matching\n");
+    //     goto _dispatch;
+    // }
+
+    for(int i = 0; i < length/8; i++)
     {
-        printf("%c", (char) frame.payload[i]);
+        char __tmp = 0;
+        for(int j = 0; j < 8; j++)
+        {
+            __tmp |= eval(frame.payload[i*8+j])<<(7-j);
+        }
+        printf("%c", __tmp);
     }
 
     return 0;
@@ -103,7 +114,7 @@ void* receiver(void* _)
         size_t d = meassure(function + 64);
         d = eval(d);
 
-        if(preamble_counter < 7 * 8 + 7)
+        if(preamble_counter < 0 * 8 + 7)
         {
             if(d == preamble_counter % 2)
             {
@@ -146,13 +157,14 @@ void* receiver(void* _)
     // retrieve length
     for(int i=0; i<16; i++)
     {
-        length_ |= eval(frame.length[i])<<(15-i);
+        length |= eval(frame.length[i])<<(15-i);
     }
 
     if(length > 1500 || length < 46)
     {
-        fprintf("Length faulty: %d announced\n", length);
-        exit(1);
+        // fprintf(stderr, "Length faulty: %d announced\n", length);
+        length = 0;
+        return NULL;        
     }
 
     while(1)

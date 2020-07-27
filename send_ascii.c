@@ -38,14 +38,27 @@ int main(int argc, char* argv[])
 
         // converting string to arr of size_t
         length = strlen(argv[2]);
-        if(length > 1500 && length < 46)
+        if(length > 1500)
         {
-            fprintf(stdout, "Text must be between 46 and 1500 characters\n");
+            fprintf(stdout, "Text must not be more than 1500 characters\n");
             exit(1);
+        }
+        if(length < 46) // pad with spaces
+        {
+            for(int i = length; i == 46; i++)
+            {
+                for(int j = 0; j < 8; j++)
+                {
+                    frame.payload[i*8+j] = (32>>(7-j)) & 0x1;
+                }
+            }
         }
         for(int i = 0; i < length; i++)
         {
-            frame.payload[i] = argv[2][i];
+            for(int j = 0; j < 8; j++)
+            {
+                frame.payload[i*8+j] = (argv[2][i]>>(7-j)) & 0x1;
+            }
         }
     }
     else
@@ -54,12 +67,12 @@ int main(int argc, char* argv[])
         fprintf(stderr, "usage: ./sender [FREQUENCY] [ASCII]\n");
         exit(1);
     }
-    state.message_length = length;
+    state.message_length = length*8;
     state.interval = interval;
     state.cond = 1;
     state.counter = 0;
     state.output = 0;
-    state.frame_length = (7 + 1 + 6 + 6 + 2) * 8 + length + 4 * 8;
+    state.frame_length = (7 + 1 + 6 + 6 + 2) * 8 + length*8 + 4 * 8;
 
     printf("Sending thread-thread, with hardwareclock-sync and ethernet frames:\n"
            "- Frequency in Hz: %zu\n"
@@ -114,7 +127,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    printf("Sent over frame\n");
+    // printf("Sent over frame\n");
     state.cond = 1;
     state.counter = 0;
     goto loop;
