@@ -26,7 +26,7 @@ void* receiver(void* _);
 
 int main(int argc, char* argv[])
 {
-    if(argc == 5)
+    if(argc == 4)
     {
         if(strcmp(argv[1], "-ff")==0)
         {
@@ -149,7 +149,7 @@ void* receiver(void* _)
         length_ |= eval(frame.length[i])<<(15-i);
     }
 
-    if(length > 1500 && length < 46)
+    if(length > 1500 || length < 46)
     {
         fprintf("Length faulty: %d announced\n", length);
         exit(1);
