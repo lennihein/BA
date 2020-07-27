@@ -40,12 +40,12 @@ int main(int argc, char* argv[])
         length = strlen(argv[2]);
         if(length > 1500 && length < 46)
         {
-            fprintf("Text must be between 46 and 1500 characters\n");
+            fprintf(stdout, "Text must be between 46 and 1500 characters\n");
             exit(1);
         }
         for(int i = 0; i < length; i++)
         {
-            field.payload[i] = argv[2][i];
+            frame.payload[i] = argv[2][i];
         }
     }
     else

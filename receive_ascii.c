@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 
     for(int i = 0; i < length; i++)
     {
-        printf("%c", (char) field.payload[i])
+        printf("%c", (char) frame.payload[i]);
     }
 
     return 0;
