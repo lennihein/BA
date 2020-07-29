@@ -126,7 +126,7 @@ void* receiver(void* _)
         size_t d = meassure(function + 64);
         d = eval(d);
 
-        if(preamble_counter < 7 * 8 + 7)
+        if(preamble_counter < 0 * 8 + 7)
         {
             if(d == preamble_counter % 2)
             {
