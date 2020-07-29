@@ -6,4 +6,4 @@ make
 taskset 0x1 ./meassure_send 1000 &
 taskset 0x1 ./meassure_recv 1000 10000
 pkill meassure_send
-python evaluate_threshholds.py
+python3 evaluate_threshholds.py
